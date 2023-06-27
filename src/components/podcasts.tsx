@@ -1,11 +1,15 @@
 "use client";
 
-import { kv } from "@vercel/kv";
 import { useState, useEffect } from "react";
 import { PodcastCard } from "@/components/podcastcard";
 
+interface Podcast {
+  name: string;
+  image: string;
+}
+
 export function Podcasts() {
-  const [podcasts, setPodcasts] = useState([{}]);
+  const [podcasts, setPodcasts] = useState<Podcast[]>([]);
 
   // The state of this app is stored in the Vercel KV service (which is backed by Redis).
   // However, to access the state we need to invoke a server-side API route which has
