@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import { useState, useEffect } from "react";
-import { PodcastCard } from "@/components/podcastcard";
+import { useState, useEffect } from 'react';
+import { PodcastCard } from '@/components/podcastcard';
 
 interface Podcast {
   name: string;
@@ -16,8 +16,8 @@ export function Podcasts() {
   // the requisite API keys to access the KV service.
   useEffect(() => {
     async function loadPodcasts() {
-      const res = await fetch("/api/podcasts", {
-        method: "GET",
+      const res = await fetch('/api/podcasts', {
+        method: 'GET',
       }).catch((err) => {
         throw err;
       });

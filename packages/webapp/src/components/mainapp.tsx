@@ -1,7 +1,7 @@
-import Image from "next/image";
+import Image from 'next/image';
 
-import { SearchBox } from "@/components/searchbox";
-import { Podcasts } from "@/components/podcasts";
+import { SearchBox } from '@/components/searchbox';
+import { Podcasts } from '@/components/podcasts';
 
 export function MainApp() {
   return (
@@ -16,5 +16,5 @@ export function MainApp() {
         <Podcasts />
       </div>
     </div>
-  ) ;
+  );
 }

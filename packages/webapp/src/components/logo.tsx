@@ -6,12 +6,7 @@ export function Logo() {
       target="_blank"
       rel="noopener noreferrer"
     >
-      <img
-        src="https://docs.fixie.ai/assets/fixie-logo-docs.png"
-        alt="Fixie Logo"
-        width={100}
-        height={24}
-      />
+      <img src="https://docs.fixie.ai/assets/fixie-logo-docs.png" alt="Fixie Logo" width={100} height={24} />
     </a>
   );
 }
