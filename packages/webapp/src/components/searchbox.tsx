@@ -1,11 +1,156 @@
-export function SearchBox() {
+'use client';
+import * as AI from 'ai-jsx/react';
+import { useState, ReactNode, useEffect } from 'react';
+
+import { Avatar, Card, Container, Input, Loading, Grid, Text } from '@nextui-org/react';
+import { BiSearch } from 'react-icons/bi';
+// import ReactMarkdown from "react-markdown";
+
+interface MessageType {
+  text: ReactNode;
+  loading: boolean;
+  type: 'query' | 'response';
+  timestamp: number;
+}
+
+export function SearchBox({ podcast_id, endpoint }: { podcast_id: string; endpoint: string }) {
+  const [userQuery, setUserQuery] = useState('');
+  const [polling, setPolling] = useState(false);
+  const [history, setHistory] = useState([] as MessageType[]);
+
+  const { current, fetchAI } = AI.useAIStream({
+    onComplete(final) {
+      setHistory((previous) =>
+        previous.concat([
+          {
+            text: final,
+            loading: false,
+            type: 'response',
+            timestamp: Date.now(),
+          },
+        ])
+      );
+      setPolling(false);
+      return null;
+    },
+  });
+
+  function send() {
+    const messages = [
+      ...history,
+      {
+        text: userQuery,
+        loading: false,
+        type: 'query',
+        timestamp: Date.now(),
+      } as MessageType,
+    ];
+    setUserQuery('');
+    setPolling(true);
+    setHistory(messages);
+    fetchAI(endpoint, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ messages: messages.map((m) => m.text) }),
+    });
+  }
+
   return (
-    <form className="w-full flex justify-center font-mono text-sm">
-      <input
-        type="search"
-        className="w-full h-12 p-6 rounded-full bg-slate-950 fg-slate-100 border-2 border-slate-100"
-        defaultValue="Search for anything"
-      ></input>
-    </form>
+    <Container>
+      <Grid.Container justify="center" gap={1} css={{ width: '100%' }}>
+        <Grid xs={12}>
+          <Input
+            placeholder={`Ask me anything about the ${podcast_id} podcast`}
+            bordered={true}
+            rounded
+            size="xl"
+            fullWidth
+            readOnly={polling}
+            disabled={polling}
+            color="primary"
+            contentLeft={polling ? <Loading size="sm" type="points-opacity" /> : <BiSearch />}
+            onChange={(e) => {
+              setUserQuery(e.target.value);
+            }}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                send();
+              }
+            }}
+          />
+        </Grid>
+      </Grid.Container>
+      <Grid.Container justify="center" gap={1} css={{ width: '100%' }}>
+        <Grid xs={12}>
+          <SearchResults
+            results={
+              current
+                ? history.concat({
+                    text: current,
+                    loading: true,
+                    type: 'response',
+                    timestamp: Date.now(),
+                  })
+                : history
+            }
+          />
+        </Grid>
+      </Grid.Container>
+    </Container>
+  );
+}
+
+/**
+ * Represents a single message in a chat session.
+ */
+function Message({ message }: { message: MessageType }) {
+  // TODO: Can we use ReactMarkdown or just stick to components that AIStream can return?
+  return (
+    <Container>
+      <Card>
+        <Card.Body>
+          <Grid.Container gap={1} justify="flex-start" alignItems="center">
+            <Grid xs={2}>
+              {message.loading ? (
+                <Loading />
+              ) : (
+                <Avatar
+                  css={{ position: 'absolute', top: '0.8rem' }}
+                  size="lg"
+                  src={message.type === 'response' ? '/trefoil.png' : '/user.png'}
+                />
+              )}
+            </Grid>
+            <Grid xs={10}>
+              {message.type === 'response' ? (
+                <Text css={message.loading ? { color: 'gray' } : {}}>{message.text}</Text>
+              ) : (
+                <Text size={'$xl'}>{message.text}</Text>
+              )}
+            </Grid>
+          </Grid.Container>
+        </Card.Body>
+      </Card>
+    </Container>
+  );
+}
+
+/**
+ * Represents result messages in a search session.
+ */
+function SearchResults({ results }: { results: MessageType[] }) {
+  // We show the most recent query first.
+  let messages = results.sort((a, b) => b.timestamp - a.timestamp);
+
+  return (
+    <Container>
+      <Grid.Container justify="center" gap={1} css={{ width: '100%' }}>
+        {messages.map((message, id) => (
+          <Grid xs={12} key={id}>
+            <Message message={message} />
+          </Grid>
+        ))}
+      </Grid.Container>
+    </Container>
   );
 }
