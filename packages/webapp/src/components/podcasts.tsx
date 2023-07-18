@@ -1,16 +1,16 @@
-'use client';
+'use client'
 
-import { useState, useEffect } from 'react';
-import { PodcastCard } from '@/components/podcastcard';
+import { useState, useEffect } from 'react'
+import { PodcastCard } from '@/components/podcastcard'
 
 interface Podcast {
-  slug: string;
-  title: string;
-  imageUrl: string;
+  slug: string
+  title: string
+  imageUrl: string
 }
 
 export function Podcasts() {
-  const [podcasts, setPodcasts] = useState<Podcast[]>([]);
+  const [podcasts, setPodcasts] = useState<Podcast[]>([])
 
   // The state of this app is stored in the Vercel KV service (which is backed by Redis).
   // However, to access the state we need to invoke a server-side API route which has
@@ -18,19 +18,24 @@ export function Podcasts() {
   useEffect(() => {
     async function loadPodcasts() {
       const res = await fetch('/api/podcasts', {
-        method: 'GET',
-      }).catch((err) => {
-        throw err;
-      });
-      const data = await res.json();
-      setPodcasts(data);
+        method: 'GET'
+      }).catch(err => {
+        throw err
+      })
+      const data = await res.json()
+      setPodcasts(data)
     }
-    loadPodcasts();
-  }, []);
+    loadPodcasts()
+  }, [])
 
   const cards = podcasts.map((podcast, index) => (
-    <PodcastCard title={podcast.title} imageUrl={podcast.imageUrl} key={index} />
-  ));
+    <PodcastCard
+      title={podcast.title}
+      imageUrl={podcast.imageUrl}
+      key={index}
+      slug={podcast.slug}
+    />
+  ))
 
-  return <div className="w-full grid grid-cols-3 gap-4 p-12">{cards}</div>;
+  return <div className="w-full grid grid-cols-3 gap-4 p-12">{cards}</div>
 }

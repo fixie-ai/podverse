@@ -1,5 +1,9 @@
-import { MainApp } from '@/components/mainapp';
+import { MainApp } from '@/components/mainapp'
 
 export default function Home() {
-  return <MainApp />;
+  return (
+    <main className="flex min-h-screen flex-col items-center justify-start">
+      <MainApp />
+    </main>
+  )
 }
