@@ -50,7 +50,7 @@ program
       description: feed.description,
       url: feed.link,
       rssUrl: podcastUrl,
-      imageUrl: feed.image?.url,
+      imageUrl: feed.image?.url ?? feed.itunes?.image,
       corpusId: options.corpus,
       episodes: episodes,
     };
