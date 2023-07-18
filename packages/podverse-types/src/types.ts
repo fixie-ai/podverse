@@ -7,6 +7,8 @@ export type Podcast = {
   slug: string;
   title: string;
   description?: string;
+  url?: string;
+  rssUrl?: string;
   imageUrl?: string;
   corpusId?: string;
   episodes?: Episode[];
@@ -16,6 +18,7 @@ export type Podcast = {
 export type Episode = {
   title: string;
   description?: string;
+  url?: string;
   pubDate?: string;
   audioUrl?: string;
   transcriptUrl?: string;
