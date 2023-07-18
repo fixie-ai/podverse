@@ -4,20 +4,14 @@ import Parser from 'rss-parser';
 import terminal from 'terminal-kit';
 const { terminal: term } = terminal;
 import slug from 'slug';
+import { Podcast } from 'podverse-types';
 
 program.name('ingester').version('0.0.1').description('Ingest a podcast into the Podverse app.');
-
-type Podcast = {
-  slug: string;
-  title: string;
-  description?: string;
-  imageUrl?: string;
-  corpusId?: string;
-};
 
 program
   .command('ingest <podcastUrl>')
   .option('-f, --force', 'Force ingestion even if podcast already exists.')
+  .option('--corpus [corpusId]', 'Fixie Corpus ID to use for this podcast.')
   .action(async (podcastUrl: string) => {
     // Read the RSS feed metadata.
     const parser = new Parser();
@@ -43,6 +37,7 @@ program
       title: feed.title,
       description: feed.description,
       imageUrl: feed.image?.url,
+      corpusId: program.opts().corpus,
     };
 
     // Write the podcast to KV.

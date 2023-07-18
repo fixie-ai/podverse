@@ -5,6 +5,7 @@
 export const runtime = 'edge';
 
 import { kv } from '@vercel/kv';
+import { Podcast } from 'podverse-types';
 
 /** Return a list of all podcasts. */
 export async function GET(req: Request): Promise<Response> {
@@ -14,7 +15,7 @@ export async function GET(req: Request): Promise<Response> {
   const podcastData = await Promise.all(
     keys.map(async (key) => {
       const podcast = await kv.json.get(key, '$');
-      return podcast[0];
+      return podcast[0] as Podcast;
     })
   );
   return new Response(JSON.stringify(podcastData), {
