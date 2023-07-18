@@ -3,8 +3,10 @@ import * as AI from 'ai-jsx/react';
 import { useState, ReactNode, useEffect } from 'react';
 
 import { Avatar, Card, Container, Input, Loading, Grid, Text } from '@nextui-org/react';
-import { BiSearch } from 'react-icons/bi';
-// import ReactMarkdown from "react-markdown";
+import { BiSearch, BiUser } from 'react-icons/bi';
+import { AiFillRobot } from 'react-icons/ai';
+import { PiRobot } from 'react-icons/pi';
+import { SiRobotframework } from 'react-icons/si';
 
 interface MessageType {
   text: ReactNode;
@@ -13,7 +15,7 @@ interface MessageType {
   timestamp: number;
 }
 
-export function SearchBox({ podcast_id, endpoint }: { podcast_id: string; endpoint: string }) {
+export function SearchBox({ podcastSlug, endpoint }: { podcastSlug: string; endpoint: string }) {
   const [userQuery, setUserQuery] = useState('');
   const [polling, setPolling] = useState(false);
   const [history, setHistory] = useState([] as MessageType[]);
@@ -60,7 +62,7 @@ export function SearchBox({ podcast_id, endpoint }: { podcast_id: string; endpoi
       <Grid.Container justify="center" gap={1} css={{ width: '100%' }}>
         <Grid xs={12}>
           <Input
-            placeholder={`Ask me anything about the ${podcast_id} podcast`}
+            placeholder={`Ask me anything about the ${podcastSlug} podcast`}
             bordered={true}
             rounded
             size="xl"
@@ -110,15 +112,13 @@ function Message({ message }: { message: MessageType }) {
       <Card>
         <Card.Body>
           <Grid.Container gap={1} justify="flex-start" alignItems="center">
-            <Grid xs={2}>
+            <Grid xs={1}>
               {message.loading ? (
                 <Loading />
+              ) : message.type === 'response' ? (
+                <PiRobot size={25} />
               ) : (
-                <Avatar
-                  css={{ position: 'absolute', top: '0.8rem' }}
-                  size="lg"
-                  src={message.type === 'response' ? '/trefoil.png' : '/user.png'}
-                />
+                <BiUser size={25} />
               )}
             </Grid>
             <Grid xs={10}>
