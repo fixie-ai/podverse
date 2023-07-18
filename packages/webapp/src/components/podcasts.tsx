@@ -4,8 +4,9 @@ import { useState, useEffect } from 'react';
 import { PodcastCard } from '@/components/podcastcard';
 
 interface Podcast {
-  name: string;
-  image: string;
+  slug: string;
+  title: string;
+  imageUrl: string;
 }
 
 export function Podcasts() {
@@ -28,7 +29,7 @@ export function Podcasts() {
   }, []);
 
   const cards = podcasts.map((podcast, index) => (
-    <PodcastCard title={podcast.name} imageUrl={podcast.image} key={index} />
+    <PodcastCard title={podcast.title} imageUrl={podcast.imageUrl} key={index} />
   ));
 
   return <div className="w-full grid grid-cols-3 gap-4 p-12">{cards}</div>;
