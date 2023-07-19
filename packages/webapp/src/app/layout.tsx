@@ -11,10 +11,11 @@ import { Header } from '@/components/header'
 
 export const metadata: Metadata = {
   title: {
-    default: 'Next.js AI Chatbot',
-    template: `%s - Next.js AI Chatbot`
+    default: 'Podverse - The Podcast AI Chatbot',
+    template: `%s - Podverse`
   },
-  description: 'An AI-powered chatbot template built with Next.js and Vercel.',
+  description:
+    'Podverse is chatbot that answers questions about podcast content.',
   themeColor: [
     { media: '(prefers-color-scheme: light)', color: 'white' },
     { media: '(prefers-color-scheme: dark)', color: 'black' }
