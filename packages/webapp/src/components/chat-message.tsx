@@ -1,4 +1,5 @@
 import { Message } from 'ai'
+import Image from 'next/image'
 import remarkGfm from 'remark-gfm'
 import remarkMath from 'remark-math'
 
@@ -26,7 +27,11 @@ export function ChatMessage({ message, ...props }: ChatMessageProps) {
             : 'bg-primary text-primary-foreground'
         )}
       >
-        {message.role === 'user' ? <IconUser /> : <IconOpenAI />}
+        {message.role === 'user' ? (
+          <IconUser />
+        ) : (
+          <Image src="/foxie.png" alt="Fixie" />
+        )}
       </div>
       <div className="ml-4 flex-1 space-y-2 overflow-hidden px-1">
         <MemoizedReactMarkdown
