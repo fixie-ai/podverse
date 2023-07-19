@@ -12,12 +12,8 @@ export function FooterText({ className, ...props }: React.ComponentProps<'p'>) {
       )}
       {...props}
     >
-      Open source AI chatbot built with{' '}
-      <ExternalLink href="https://ai-jsx.com/">AI.JSX</ExternalLink> and a{' '}
-      <ExternalLink href="https://app.fixie.ai/">
-        Fixie Audio Corpus
-      </ExternalLink>
-      .
+      Built with <ExternalLink href="https://ai-jsx.com/">AI.JSX</ExternalLink>{' '}
+      and <ExternalLink href="https://app.fixie.ai/">Fixie</ExternalLink>.
     </p>
   )
 }
