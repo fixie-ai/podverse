@@ -3,10 +3,10 @@ import { cn } from '@/lib/utils'
 
 export function MainApp() {
   return (
-    <div className={cn('pb-[200px] pt-4 md:pt-10')}>
-      <div className="mx-auto max-w-2xl px-4">
-        <div className="rounded-lg border bg-background p-8">
-          <h1 className="mb-2 text-lg font-semibold">
+    <div className={cn('pb-[200px] pt-4 w-8/12 md:pt-10')}>
+      <div className="mx-auto px-4">
+        <div className="rounded-lg border bg-background p-4">
+          <h1 className="text-lg font-semibold">
             Welcome to Podverse: an AI-powered podcast search engine!
           </h1>
         </div>

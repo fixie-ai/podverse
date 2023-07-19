@@ -38,7 +38,10 @@ export async function Header() {
           </Sidebar>
         ) : (
           <Link href="/" target="_blank" rel="nofollow">
-            <Image src="/foxie.png" alt="Foxie" width={32} height={32} />
+            <div className="flex flex-row">
+              <Image src="/foxie.png" alt="Foxie" width={32} height={32} />
+              <span className="font-mono text-lg pl-4">Podverse</span>
+            </div>
           </Link>
         )}
         {/* <div className="flex items-center">

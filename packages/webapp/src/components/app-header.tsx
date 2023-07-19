@@ -1,4 +1,4 @@
-import { Logo } from '@/components/logo';
+import { Logo } from '@/components/logo'
 
 export function AppHeader() {
   return (
@@ -8,5 +8,5 @@ export function AppHeader() {
         <Logo />
       </div>
     </div>
-  );
+  )
 }

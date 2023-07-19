@@ -1,15 +1,15 @@
-'use client';
-import { createTheme, NextUIProvider } from '@nextui-org/react';
-import * as React from 'react';
+'use client'
+import { createTheme, NextUIProvider } from '@nextui-org/react'
+import * as React from 'react'
 
-import { AppHeader } from '@/components/app-header';
+import { AppHeader } from '@/components/app-header'
 
 const darkTheme = createTheme({
   type: 'dark',
   theme: {
     // colors: {...},
-  },
-});
+  }
+})
 
 export function PageBase({ children }: { children: React.ReactNode }) {
   return (
@@ -19,5 +19,5 @@ export function PageBase({ children }: { children: React.ReactNode }) {
         {children}
       </main>
     </NextUIProvider>
-  );
+  )
 }
