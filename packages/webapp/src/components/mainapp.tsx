@@ -1,14 +1,19 @@
-import { Podcasts } from '@/components/podcasts';
+import { Podcasts } from '@/components/podcasts'
+import { cn } from '@/lib/utils'
 
 export function MainApp() {
   return (
-    <div className="w-full max-w-5xl mt-8">
-      <div className="font-mono text-md p-4 border-2 border-slate-700 rounded-md">
-        Podverse is an AI-powered podcast search engine.
-      </div>
-      <div className="w-full flex justify-center mt-8">
-        <Podcasts />
+    <div className={cn('pb-[200px] pt-4 md:pt-10')}>
+      <div className="mx-auto max-w-2xl px-4">
+        <div className="rounded-lg border bg-background p-8">
+          <h1 className="mb-2 text-lg font-semibold">
+            Welcome to Podverse: an AI-powered podcast search engine!
+          </h1>
+        </div>
+        <div className="mx-auto flex justify-center mt-8">
+          <Podcasts />
+        </div>
       </div>
     </div>
-  );
+  )
 }
