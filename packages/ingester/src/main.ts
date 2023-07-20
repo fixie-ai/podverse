@@ -39,6 +39,7 @@ program
         title: entry.title ?? 'Untitled',
         description: entry.description,
         url: entry.link,
+        imageUrl: entry.itunes?.image,
         pubDate: entry.pubDate,
         audioUrl: entry.enclosure?.url,
       };

@@ -20,6 +20,7 @@ export type Episode = {
   description?: string;
   url?: string;
   pubDate?: string;
+  imageUrl?: string;
   audioUrl?: string;
   transcriptUrl?: string;
 };
