@@ -2,12 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { PodcastCard } from '@/components/podcastcard'
-
-interface Podcast {
-  slug: string
-  title: string
-  imageUrl: string
-}
+import { Podcast } from 'podverse-types';
 
 export function Podcasts() {
   const [podcasts, setPodcasts] = useState<Podcast[]>([])
@@ -31,7 +26,7 @@ export function Podcasts() {
   const cards = podcasts.map((podcast, index) => (
     <PodcastCard
       title={podcast.title}
-      imageUrl={podcast.imageUrl}
+      imageUrl={podcast.imageUrl ?? '/podverse-logo.png'}
       key={index}
       slug={podcast.slug}
     />
