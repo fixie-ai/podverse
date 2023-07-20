@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { PodcastCard } from '@/components/podcastcard'
-import { Podcast } from 'podverse-types';
+import { Podcast } from 'podverse-types'
 
 export function Podcasts() {
   const [podcasts, setPodcasts] = useState<Podcast[]>([])

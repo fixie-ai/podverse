@@ -32,7 +32,9 @@ function EpisodeCarousel({ podcast }: { podcast: Podcast }) {
   return (
     <div className="flex items-center flex-col mx-auto w-4/5 pt-4 gap-4">
       <div className="flex flex-row w-full justify-stretch">
-        <div className="text-sm text-muted-foreground w-full">Latest episodes</div>
+        <div className="text-sm text-muted-foreground w-full">
+          Latest episodes
+        </div>
         <div className="flex-auto w-full"></div>
         <div className="text-sm text-muted-foreground w-full text-end">
           <a href="/episodes/${podcast.slug}">All episodes ≫</a>
