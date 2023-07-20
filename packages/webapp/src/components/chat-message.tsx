@@ -31,7 +31,7 @@ export function ChatMessage({ message, ...props }: ChatMessageProps) {
         {message.role === 'user' ? (
           <IconUser />
         ) : (
-          <Image src="/foxie.png" alt="Fixie" width={32} />
+          <Image src="/foxie.png" alt="Fixie" width={32} height={32} />
         )}
       </div>
       <div className="ml-4 flex-1 space-y-2 overflow-hidden px-1">

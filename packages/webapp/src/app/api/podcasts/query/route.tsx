@@ -40,15 +40,6 @@ async function PodcastDocsQA(props: DocsQAProps<PodcastMetadata>) {
 
   const chunkFormatter = ChunkFormatter
 
-  /**
-   * TODO: Implement the following:
-   * persona
-   * understand that the user can't see the document
-   * improve saliency of response
-   * work with multiple documents?
-   * suggest follow up questions -> UI affordance
-   */
-
   return (
     <>
       <OpenAI chatModel="gpt-4">
@@ -80,9 +71,14 @@ async function PodcastDocsQA(props: DocsQAProps<PodcastMetadata>) {
                   items. Also note that if an information is not present, it
                   might be because your memory is incomplete.
                   {'\n'}
-                  If any sources are particularly relevant, make sure to cite
-                  them by using a Markdown link format, at the end of your
-                  response.{'\n'}
+                  {/* If any sources are particularly relevant, make sure to cite
+            them by using a Markdown link format, at the end of your
+            response.{'\n'} */}
+                  {/* Whenever you reference a person, place, thing, or event, try to link
+            to the corresponding Wikipedia article, using a Markdown link. For
+            example, if there is a mention of China, you could replace the text
+            with {`“[China](https://en.wikipedia.org/wiki/China)“`}
+            {'\n'} */}
                   If you find interesting follow up questions that the user can
                   ask, you can include them at the very end of your response.
                   {'\n'}
@@ -122,7 +118,11 @@ async function DocsAgent({
 export async function POST(request: NextRequest) {
   const json = await request.json()
   const question = json.messages[json.messages.length - 1]
-  const corpusId = 'corpusId' in json ? json.corpusId : '1095'
+  const corpusId = json.corpusId
+
+  if (corpusId == null || corpusId == '') {
+    throw new Error('Corpus ID is required')
+  }
 
   return new StreamingTextResponse(
     toTextStream(<DocsAgent question={question.content} corpusId={corpusId} />)
