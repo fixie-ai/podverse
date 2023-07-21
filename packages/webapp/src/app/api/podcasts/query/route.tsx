@@ -43,55 +43,43 @@ async function PodcastDocsQA(props: DocsQAProps<PodcastMetadata>) {
   return (
     <>
       <OpenAI chatModel="gpt-4">
+        {/* <OpenAI chatModel="gpt-3.5-turbo-16k"> */}
         <ChatCompletion>
           <SystemMessage>
-            Here is a passage of text. I would like you to rewrite this text
-            with Markdown links to Wikipedia articles about people, places,
-            things, or events mentioned in the text. For example, if there is a
-            mention of China, you could replace the text with{' '}
-            {`“[China](https://en.wikipedia.org/wiki/China)“`}. Only return the
-            rewritten text, without any explanation. Do not include{' '}
-            {'"Passage:"'} in the response.
+            You are a helpful chatbot that answers questions about a podcast
+            episode by looking at its transcript. The relevant parts of the
+            transcript is given to you below, and you are to answer the user
+            question only based on what has been said in the podcast.
+            {/* The transcripts are relevant pieces from the podcast transcript. */}
           </SystemMessage>
-          <UserMessage>
-            Passage:{'\n'}
-            {/* <OpenAI chatModel="gpt-3.5-turbo-16k-0613"> */}
-            <OpenAI chatModel="gpt-4">
-              <ChatCompletion>
-                <SystemMessage>
-                  You are a helpful podcast chatbot and a trained question
-                  answerer. The user asks you a question about the podcast and
-                  you should answer the question truthfully, using only
-                  documents below that you retrieved from your internal memory.
-                  The documents are relevant pieces from the podcast transcript.
-                  Do not use any other knowledge you have about the world. If
-                  you {"don't"} know how to answer the question, just say
-                  {` "I don't know."`}.{'\n'}
-                  Note that the user cannot see the contents of the memory
-                  items. Also note that if an information is not present, it
-                  might be because your memory is incomplete.
-                  {'\n'}
-                  {/* If any sources are particularly relevant, make sure to cite
+          <SystemMessage>
+            Do not use any other knowledge you have about the world. If you{' '}
+            {"don't"} know how to answer the question, just say
+            {` "I don't think the podcast covered this subject."`}.{'\n'}
+            {'\n'}
+            {/* If any sources are particularly relevant, make sure to cite
             them by using a Markdown link format, at the end of your
             response.{'\n'} */}
-                  {/* Whenever you reference a person, place, thing, or event, try to link
-            to the corresponding Wikipedia article, using a Markdown link. For
-            example, if there is a mention of China, you could replace the text
-            with {`“[China](https://en.wikipedia.org/wiki/China)“`}
-            {'\n'} */}
-                  If you find interesting follow up questions that the user can
-                  ask, you can include them at the very end of your response.
-                  {'\n'}
-                  Here are the relevant pieces of memory you have retrieved:
-                  {'\n```memory-pieces\n'}
-                  {chunks.map(chunk => chunkFormatter({ doc: chunk }))}
-                  {'\n```\n'}
-                  And here is the question you must answer:
-                </SystemMessage>
-                <UserMessage>{props.question}</UserMessage>
-              </ChatCompletion>
-            </OpenAI>
-          </UserMessage>
+            You may suggest follow up questions to the user, if you know the
+            answer to them.
+          </SystemMessage>
+          <SystemMessage>
+            You ALWAYS include a link to the wikipidia page of well known
+            People, Places, Technologies, or Events. Even if that is not
+            mentioned in the transcript. If you know the link to the entity{"'"}
+            s wikipedia page, you get extra points for including the link in
+            markdown format. For example, if you are to mention React, you MUST
+            write it as{' '}
+            {`"[React](https://en.wikipedia.org/wiki/React_(software))"`}
+          </SystemMessage>
+          <SystemMessage>
+            Here are the relevant transcript texts:
+            {'\n```txt filename="transcripts.txt"\n'}
+            {chunks.map(chunk => chunkFormatter({ doc: chunk }))}
+            {'\n```\n'}
+            The user question follows below.
+          </SystemMessage>
+          <UserMessage>{props.question}</UserMessage>
         </ChatCompletion>
       </OpenAI>
       {'<table><tr>'}
