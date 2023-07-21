@@ -37,7 +37,7 @@ async function PodcastDocsQA(props: DocsQAProps<PodcastMetadata>) {
   let chunks
   try {
     chunks = await props.corpus.search(props.question, {
-      limit: props.chunkLimit ?? 2
+      limit: props.chunkLimit ?? 1
     })
   } catch (e: any) {
     return <>Sorry there was an error. {e.message}</>
