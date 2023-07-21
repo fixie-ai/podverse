@@ -47,7 +47,11 @@ export default function EpisodePage({ params }: RouteSegment) {
     <>
       <PodcastHeader podcast={podcastData!} />
       <EpisodeGrid podcast={podcastData!} />
-      <Chat id={nanoid()} apiPath="/api/podcasts/query" />
+      <Chat
+        id={nanoid()}
+        apiPath="/api/podcasts/query"
+        corpusId={podcastData.corpusId!}
+      />
     </>
   ) : (
     <div></div>

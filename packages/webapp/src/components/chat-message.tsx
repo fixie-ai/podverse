@@ -2,6 +2,7 @@ import { Message } from 'ai'
 import Image from 'next/image'
 import remarkGfm from 'remark-gfm'
 import remarkMath from 'remark-math'
+import rehypeRaw from 'rehype-raw'
 
 import { cn } from '@/lib/utils'
 import { CodeBlock } from '@/components/ui/codeblock'
@@ -30,16 +31,28 @@ export function ChatMessage({ message, ...props }: ChatMessageProps) {
         {message.role === 'user' ? (
           <IconUser />
         ) : (
-          <Image src="/foxie.png" alt="Fixie" />
+          <Image src="/foxie.png" alt="Fixie" width={32} height={32} />
         )}
       </div>
       <div className="ml-4 flex-1 space-y-2 overflow-hidden px-1">
         <MemoizedReactMarkdown
+          rehypePlugins={[rehypeRaw]}
           className="prose break-words dark:prose-invert prose-p:leading-relaxed prose-pre:p-0"
           remarkPlugins={[remarkGfm, remarkMath]}
           components={{
             p({ children }) {
               return <p className="mb-2 last:mb-0">{children}</p>
+            },
+            a({ children, ...props }) {
+              // Make sure that all links open in a new tab.
+              return (
+                <a target="_blank" {...props}>
+                  {children}
+                </a>
+              )
+            },
+            details({ children }) {
+              return <details className="mb-2 last:mb-0">{children}</details>
             },
             code({ node, inline, className, children, ...props }) {
               if (children.length) {

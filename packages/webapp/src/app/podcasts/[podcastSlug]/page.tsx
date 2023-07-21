@@ -51,13 +51,17 @@ export default function PodcastPage({ params }: RouteSegment) {
       setPodcastData(data)
     }
     loadPodcast()
-  }, [])
+  }, [params.podcastSlug])
 
   return podcastData != null ? (
     <>
       <PodcastHeader podcast={podcastData!} />
       <EpisodeCarousel podcast={podcastData!} />
-      <Chat id={nanoid()} apiPath="/api/podcasts/query" />
+      <Chat
+        id={nanoid()}
+        apiPath="/api/podcasts/query"
+        corpusId={podcastData.corpusId!}
+      />
     </>
   ) : (
     <div></div>
