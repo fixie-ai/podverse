@@ -63,13 +63,17 @@ export default function EpisodeSinglePage({ params }: RouteSegment) {
       setEpisode(data.episodes[params.index])
     }
     loadPodcast()
-  }, [])
+  }, [params.index, params.podcastSlug])
 
   return episode != null && podcast != null ? (
     <>
       <PodcastHeader podcast={podcast} />
       <EpisodeDetail episode={episode} />
-      <Chat id={nanoid()} apiPath="/api/podcasts/query" />
+      <Chat
+        id={nanoid()}
+        apiPath="/api/podcasts/query"
+        corpusId={podcast.corpusId!}
+      />
     </>
   ) : (
     <div></div>
