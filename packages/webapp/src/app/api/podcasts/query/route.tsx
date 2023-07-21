@@ -34,8 +34,9 @@ type MustBeJsonObject<T> = T extends JsonObject ? T : never
 type PodcastMetadata = MustBeJsonObject<{ source: string }>
 
 async function PodcastDocsQA(props: DocsQAProps<PodcastMetadata>) {
+  let chunks
   try {
-    const chunks = await props.corpus.search(props.question, {
+    chunks = await props.corpus.search(props.question, {
       limit: props.chunkLimit ?? 2
     })
   } catch (e: any) {
