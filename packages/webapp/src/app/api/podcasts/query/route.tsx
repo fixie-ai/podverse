@@ -34,9 +34,13 @@ type MustBeJsonObject<T> = T extends JsonObject ? T : never
 type PodcastMetadata = MustBeJsonObject<{ source: string }>
 
 async function PodcastDocsQA(props: DocsQAProps<PodcastMetadata>) {
-  const chunks = await props.corpus.search(props.question, {
-    limit: props.chunkLimit ?? 2
-  })
+  try {
+    const chunks = await props.corpus.search(props.question, {
+      limit: props.chunkLimit ?? 2
+    })
+  } catch (e: any) {
+    return <>Sorry there was an error. {e.message}</>
+  }
 
   const chunkFormatter = ChunkFormatter
 
@@ -109,7 +113,11 @@ export async function POST(request: NextRequest) {
   const corpusId = json.corpusId
 
   if (corpusId == null || corpusId == '') {
-    throw new Error('Corpus ID is required')
+    toTextStream(
+      <div>
+        Sorry there was an error. Corpus ID is missing from the request.
+      </div>
+    )
   }
 
   return new StreamingTextResponse(

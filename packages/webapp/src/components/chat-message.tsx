@@ -43,6 +43,14 @@ export function ChatMessage({ message, ...props }: ChatMessageProps) {
             p({ children }) {
               return <p className="mb-2 last:mb-0">{children}</p>
             },
+            a({ children, ...props }) {
+              // Make sure that all links open in a new tab.
+              return (
+                <a target="_blank" {...props}>
+                  {children}
+                </a>
+              )
+            },
             details({ children }) {
               return <details className="mb-2 last:mb-0">{children}</details>
             },
