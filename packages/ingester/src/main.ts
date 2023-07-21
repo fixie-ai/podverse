@@ -48,7 +48,7 @@ async function readPodcastFeed(podcastUrl: string): Promise<Podcast> {
   const episodes: Episode[] = feed.items.map((entry) => {
     return {
       title: entry.title ?? 'Untitled',
-      description: entry.description,
+      description: entry.description ?? entry.itunes.subtitle,
       url: entry.link,
       imageUrl: entry.itunes?.image,
       pubDate: entry.pubDate,
