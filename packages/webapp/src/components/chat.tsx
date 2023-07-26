@@ -27,6 +27,7 @@ export interface ChatProps extends React.ComponentProps<'div'> {
   id?: string
   apiPath?: string
   corpusId: string
+  podcastSlug: string
 }
 
 export function Chat({
@@ -34,7 +35,8 @@ export function Chat({
   initialMessages,
   className,
   apiPath,
-  corpusId
+  corpusId,
+  podcastSlug
 }: ChatProps) {
   const [previewToken, setPreviewToken] = useLocalStorage<string | null>(
     'ai-token',
@@ -50,6 +52,7 @@ export function Chat({
       body: {
         id,
         corpusId,
+        podcastSlug,
         previewToken
       },
       onResponse(response) {
