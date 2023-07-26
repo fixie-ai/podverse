@@ -53,20 +53,16 @@ export default function PodcastPage({ params }: RouteSegment) {
     loadPodcast()
   }, [params.podcastSlug])
 
-  let corpusId = podcastData?.corpusId!
-
-  if (
-    process.env.FIXIE_API_URL ==
-    'https://mike-dns-corpus-chunksize-experiment-pgaenaxiea-uc.a.run.app/api'
-  ) {
-    corpusId = '3'
-  }
-
   return podcastData != null ? (
     <>
       <PodcastHeader podcast={podcastData!} />
       <EpisodeCarousel podcast={podcastData!} />
-      <Chat id={nanoid()} apiPath="/api/podcasts/query" corpusId={corpusId} />
+      <Chat
+        id={nanoid()}
+        apiPath="/api/podcasts/query"
+        corpusId={podcastData.corpusId!}
+        podcastSlug={podcastData.slug!}
+      />
     </>
   ) : (
     <div></div>

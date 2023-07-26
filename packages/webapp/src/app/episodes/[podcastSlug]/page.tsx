@@ -51,6 +51,7 @@ export default function EpisodePage({ params }: RouteSegment) {
         id={nanoid()}
         apiPath="/api/podcasts/query"
         corpusId={podcastData.corpusId!}
+        podcastSlug={podcastData.slug!}
       />
     </>
   ) : (
