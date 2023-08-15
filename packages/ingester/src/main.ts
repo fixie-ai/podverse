@@ -73,13 +73,17 @@ program
   .description('Ingest a podcast into the Podverse app.')
   .argument('<podcastUrl>', 'URL of the podcast RSS feed.')
   .option('-f, --force', 'Force ingestion even if podcast already exists.')
-  .option('--corpus [corpusId]', 'Fixie Corpus ID to use for this podcast.')
+  .option('--corpus <corpusId>', 'Fixie Corpus ID to use for this podcast.')
+  .option('--suggestedQuery <queries...>', 'Suggested queries to use for this podcast.')
   .action(async (podcastUrl: string, options) => {
     const newPodcast = await readPodcastFeed(podcastUrl);
     // TODO: Create Fixie corpus and add this information to the Podcast object,
     // if --corpus is not specified.
     if (options.corpus) {
       newPodcast.corpusId = options.corpus;
+    }
+    if (options.suggestedQuery) {
+      newPodcast.suggestedQueries = options.suggestedQuery;
     }
     setPodcast(newPodcast);
     console.log(JSON.stringify(newPodcast, null, 4));
@@ -92,7 +96,9 @@ program
     const slugs = await listPodcasts();
     for (const slug of slugs) {
       const podcast = await getPodcast(slug);
-      term(slug + ': ').green(podcast.title);
+      term(slug + ': ')
+        .green(podcast.title + ' ')
+        .blue(podcast.rssUrl);
       if (podcast.corpusId) {
         term(` (corpus: ${podcast.corpusId})`);
       } else {
@@ -108,6 +114,25 @@ program
   .argument('<slug>', 'Slug of the podcast to get.')
   .action(async (slug: string) => {
     const podcast = await getPodcast(slug);
+    console.log(JSON.stringify(podcast, null, 4));
+  });
+
+program
+  .command('update')
+  .description('Update metadata for a given podcast.')
+  .argument('<slug>', 'Slug of the podcast to update.')
+  .option('--corpus <corpusId>', 'Fixie Corpus ID to use for this podcast.')
+  .option('--suggestedQuery <queries...>', 'Suggested queries to use for this podcast.')
+  .action(async (slug: string, options) => {
+    const podcast = await getPodcast(slug);
+    podcast.corpusId = options.corpusId;
+    if (options.suggestedQuery) {
+      if (!podcast.suggestedQueries) {
+        podcast.suggestedQueries = [];
+      }
+      podcast.suggestedQueries = podcast.suggestedQueries.concat(options.suggestedQuery);
+    }
+    setPodcast(podcast);
     console.log(JSON.stringify(podcast, null, 4));
   });
 

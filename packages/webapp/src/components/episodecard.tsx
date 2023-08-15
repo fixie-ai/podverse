@@ -11,7 +11,7 @@ export function EpisodeCard({
   episode: Episode
 }) {
   return (
-    <div className="flex flex-col w-48 gap-4 h-full p-4 mx-4 rounded-lg border bg-background bg-gray-700 dark:bg-gray-700 text-white dark:text-white">
+    <div className="flex flex-col w-48 gap-4 h-full p-4 mx-4 rounded-lg border bg-gray-700 dark:bg-gray-700 text-white dark:text-white">
       <div className="flex flex-col w-full">
         <img src={episode.imageUrl} />
         <a
@@ -21,8 +21,8 @@ export function EpisodeCard({
           <p className="mb-2 text-sm">{episode.title}</p>
         </a>
         {episode.description && (
-          <p className="mb-2 leading-normal text-muted-foreground text-xs h-32">
-            <p className="text-ellipsis overflow-hidden h-32">
+          <p className="mb-2 leading-normal text-muted-foreground text-xs h-16">
+            <p className="text-ellipsis overflow-hidden h-16">
               {episode.description ?? ''}
             </p>
           </p>

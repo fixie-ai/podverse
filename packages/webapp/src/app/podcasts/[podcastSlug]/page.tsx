@@ -35,6 +35,28 @@ function EpisodeCarousel({ podcast }: { podcast: Podcast }) {
   )
 }
 
+function SuggestedQueries({ podcast }: { podcast: Podcast }) {
+  return podcast.suggestedQueries ? (
+    <div className="flex items-center flex-col mx-auto mt-8">
+      <div className="text-sm text-muted-foreground w-full mx-auto text-center justify-center">
+        Try one of these queries:
+      </div>
+      <div className="flex flex-row w-full justify-stretch">
+        {podcast.suggestedQueries.map((query, index) => (
+          <div
+            className="mt-4 mx-8 px-4 py-2 text-sm text-white bg-slate-500 border rounded-full"
+            key={index}
+          >
+            {query}
+          </div>
+        ))}
+      </div>
+    </div>
+  ) : (
+    <></>
+  )
+}
+
 type RouteSegment = { params: { podcastSlug: string } }
 
 export default function PodcastPage({ params }: RouteSegment) {
@@ -57,6 +79,7 @@ export default function PodcastPage({ params }: RouteSegment) {
     <>
       <PodcastHeader podcast={podcastData!} />
       <EpisodeCarousel podcast={podcastData!} />
+      <SuggestedQueries podcast={podcastData!} />
       <Chat id={nanoid()} apiPath="/api/podcasts/query" />
     </>
   ) : (
