@@ -4,11 +4,11 @@ import { nanoid } from '@/lib/utils'
 import { Chat } from '@/components/chat'
 import { Episode, Podcast } from 'podverse-types'
 import { ExternalLink } from '@/components/external-link'
-import { Carousel } from 'flowbite-react'
 import { EpisodeCard } from '@/components/episodecard'
 import { PodcastHeader } from '@/components/podcastheader'
+import { Skeleton } from '@/components/ui/skeleton'
 
-function EpisodeCarousel({ podcast }: { podcast: Podcast }) {
+function LatestEpisodes({ podcast }: { podcast: Podcast | null }) {
   return (
     <div className="flex items-center flex-col mx-auto w-4/5 pt-4 gap-4">
       <div className="flex flex-row w-full justify-stretch">
@@ -17,39 +17,44 @@ function EpisodeCarousel({ podcast }: { podcast: Podcast }) {
         </div>
         <div className="flex-auto w-full"></div>
         <div className="text-sm text-muted-foreground w-full text-end">
-          <a href={`/episodes/${podcast.slug}`}>All episodes ≫</a>
+          {podcast && <a href={`/episodes/${podcast.slug}`}>All episodes ≫</a>}
         </div>
       </div>
-      <Carousel slide={false}>
-        {/* Only show the first 10 episodes. */}
-        {podcast.episodes?.slice(0, 10).map((episode, index) => (
-          <EpisodeCard
-            key={nanoid()}
-            episode={episode}
-            index={index}
-            podcast={podcast}
-          />
-        ))}
-      </Carousel>
+      {podcast ? (
+        <div className="flex flex-row w-full">
+          {podcast!.episodes?.slice(0, 5).map((episode, index) => (
+            <EpisodeCard
+              key={nanoid()}
+              episode={episode}
+              index={index}
+              podcast={podcast}
+            />
+          ))}
+        </div>
+      ) : (
+        <Skeleton className="h-48 w-full" />
+      )}
     </div>
   )
 }
 
-function SuggestedQueries({ podcast }: { podcast: Podcast }) {
-  return podcast.suggestedQueries ? (
+function SuggestedQueries({ podcast }: { podcast: Podcast | null }) {
+  return podcast && podcast.suggestedQueries ? (
     <div className="flex items-center flex-col mx-auto mt-8">
       <div className="text-sm text-muted-foreground w-full mx-auto text-center justify-center">
         Try one of these queries:
       </div>
-      <div className="flex flex-row w-full justify-stretch">
-        {podcast.suggestedQueries.map((query, index) => (
-          <div
-            className="mt-4 mx-8 px-4 py-2 text-sm text-white bg-slate-500 border rounded-full"
-            key={index}
-          >
-            {query}
-          </div>
-        ))}
+      <div className="w-full flex flex-row justify-center">
+        <div className="flex flex-row w-full items-center justify-center">
+          {podcast.suggestedQueries.map((query, index) => (
+            <div
+              className="justify-center flex mt-4 mx-8 px-4 py-2 text-sm text-white bg-slate-500 border rounded-full"
+              key={index}
+            >
+              {query}
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   ) : (
@@ -75,18 +80,16 @@ export default function PodcastPage({ params }: RouteSegment) {
     loadPodcast()
   }, [params.podcastSlug])
 
-  return podcastData != null ? (
-    <>
-      <PodcastHeader podcast={podcastData!} />
-      <EpisodeCarousel podcast={podcastData!} />
-      <SuggestedQueries podcast={podcastData!} />
+  return (
+    <div>
+      <PodcastHeader podcast={podcastData} />
+      <LatestEpisodes podcast={podcastData} />
+      <SuggestedQueries podcast={podcastData} />
       <Chat
         id={nanoid()}
         apiPath="/api/podcasts/query"
-        corpusId={podcastData.corpusId!}
+        corpusId={podcastData?.corpusId!}
       />
-    </>
-  ) : (
-    <div></div>
+    </div>
   )
 }

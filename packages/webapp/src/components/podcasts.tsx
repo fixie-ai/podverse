@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { PodcastCard } from '@/components/podcastcard'
 import { Podcast } from 'podverse-types'
+import { Skeleton } from '@/components/ui/skeleton'
 
 export function Podcasts() {
   const [podcasts, setPodcasts] = useState<Podcast[]>([])
@@ -32,5 +33,17 @@ export function Podcasts() {
     />
   ))
 
-  return <div className="w-full grid grid-cols-3 gap-4 p-12">{cards}</div>
+  const cardSkeleton = Array.from(Array(9).keys()).map((_, index) => (
+    <Skeleton className="h-72 w-full" key={index} />
+  ))
+
+  return (
+    <div className="w-full grid grid-cols-3 gap-4 p-12">
+      {podcasts.length === 0 ? (
+        <>{cardSkeleton}</>
+      ) : (
+        <>{cards}</>
+      )}
+    </div>
+  )
 }

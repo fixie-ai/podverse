@@ -20,13 +20,13 @@ export function EpisodeCard({
         >
           <p className="mb-2 text-sm">{episode.title}</p>
         </a>
-        {episode.description && (
+        {/* {episode.description && (
           <p className="mb-2 leading-normal text-muted-foreground text-xs h-16">
             <p className="text-ellipsis overflow-hidden h-16">
               {episode.description ?? ''}
             </p>
           </p>
-        )}
+        )} */}
       </div>
     </div>
   )

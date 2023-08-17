@@ -5,6 +5,7 @@ import { Chat } from '@/components/chat'
 import { Podcast } from 'podverse-types'
 import { EpisodeCard } from '@/components/episodecard'
 import { PodcastHeader } from '@/components/podcastheader'
+import { Skeleton } from '@/components/ui/skeleton'
 
 function EpisodeGrid({ podcast }: { podcast: Podcast }) {
   return (
@@ -41,9 +42,9 @@ export default function EpisodePage({ params }: RouteSegment) {
       setPodcastData(data)
     }
     loadPodcast()
-  }, [])
+  })
 
-  return podcastData != null ? (
+  return podcastData ? (
     <>
       <PodcastHeader podcast={podcastData!} />
       <EpisodeGrid podcast={podcastData!} />
@@ -54,6 +55,9 @@ export default function EpisodePage({ params }: RouteSegment) {
       />
     </>
   ) : (
-    <div></div>
+    <div>
+      Loading and stuff
+      {/* <Skeleton className="h-72 w-3/5" /> */}
+    </div>
   )
 }
