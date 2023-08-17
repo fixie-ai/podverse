@@ -22,7 +22,8 @@
     "test": "turbo run test",
     "format-for-turbo": "prettier --write .",
     "format:check": "prettier . --check",
-    "format": "turbo format-for-turbo"
+    "format": "turbo format-for-turbo",
+    "ingest": "node packages/ingester/dist/main.js"
   },
   "volta": {
     "node": "18.16.0",

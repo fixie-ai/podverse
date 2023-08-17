@@ -5,12 +5,22 @@ import terminal from 'terminal-kit';
 const { terminal: term } = terminal;
 import slug from 'slug';
 import { Episode, Podcast } from 'podverse-types';
+import { dump, load } from 'js-yaml';
+import fs from 'fs';
+
+/** Describes the configuration file YAML format. */
+interface ConfigFile {
+  podcasts: Podcast[];
+}
 
 program.name('ingester').version('0.0.1').description('Ingest a podcast into the Podverse app.');
 
 /** Return metadata for the given podcast. */
 async function getPodcast(slug: string): Promise<Podcast> {
   const podcastData = await kv.json.get(`podcasts:${slug}`, '$');
+  if (!podcastData) {
+    throw new Error(`Podcast with slug ${slug} not found.`);
+  }
   return podcastData[0] as Podcast;
 }
 
@@ -37,14 +47,14 @@ async function listPodcasts(): Promise<string[]> {
 }
 
 /** Read the given RSS feed URL and return it as a Podcast object. */
-async function readPodcastFeed(podcastUrl: string): Promise<Podcast> {
+async function readPodcastFeed(podcastUrl: string, podcastSlug?: string): Promise<Podcast> {
   // Read the RSS feed metadata.
   const parser = new Parser();
   const feed = await parser.parseURL(podcastUrl);
   if (!feed.title) {
     throw new Error('No title found for podcast.');
   }
-  const titleSlug = slug(feed.title!);
+  const titleSlug = podcastSlug ?? slug(feed.title!);
   const episodes: Episode[] = feed.items.map((entry) => {
     return {
       title: entry.title ?? 'Untitled',
@@ -104,6 +114,11 @@ program
       } else {
         term.red(' (no corpus)');
       }
+      if (podcast.episodes) {
+        term(` - ${podcast.episodes.length} episodes`);
+      } else {
+        term.red(' - no episodes');
+      }
       term('\n');
     }
   });
@@ -118,22 +133,58 @@ program
   });
 
 program
-  .command('update')
-  .description('Update metadata for a given podcast.')
-  .argument('<slug>', 'Slug of the podcast to update.')
-  .option('--corpus <corpusId>', 'Fixie Corpus ID to use for this podcast.')
-  .option('--suggestedQuery <queries...>', 'Suggested queries to use for this podcast.')
-  .action(async (slug: string, options) => {
-    const podcast = await getPodcast(slug);
-    podcast.corpusId = options.corpusId;
-    if (options.suggestedQuery) {
-      if (!podcast.suggestedQueries) {
-        podcast.suggestedQueries = [];
-      }
-      podcast.suggestedQueries = podcast.suggestedQueries.concat(options.suggestedQuery);
+  .command('dump')
+  .description('Save the current configuration to a YAML file.')
+  .argument('<filename>', 'YAML file to save the configuration to.')
+  .action(async (filename: string) => {
+    const config: ConfigFile = {
+      podcasts: [] as Podcast[],
+    };
+    const slugs = await listPodcasts();
+    for (const slug of slugs) {
+      const podcast = await getPodcast(slug);
+      // Strip out the list of episodes, since these are populated from the RSS feed.
+      podcast.episodes = undefined;
+      config.podcasts.push(podcast);
     }
-    setPodcast(podcast);
-    console.log(JSON.stringify(podcast, null, 4));
+    fs.writeFile(filename, dump(config), (err) => {
+      if (err) {
+        console.log(err);
+      }
+    });
+    term('Wrote config to ').green(filename);
+  });
+
+program
+  .command('load')
+  .description('Load the current configuration from a YAML file.')
+  .argument('<filename>', 'YAML file to read the configuration from.')
+  .action(async (filename: string) => {
+    const configFile = load(fs.readFileSync(filename, 'utf8')) as ConfigFile;
+    for (const podcastConfig of configFile.podcasts) {
+      let podcast = null;
+      try {
+        // Check to see if it exists.
+        podcast = await getPodcast(podcastConfig.slug);
+        term('Updating: ').green(podcastConfig.slug);
+      } catch (err) {
+        // Assume the podcast does not exist, let's create it.
+        term()
+          .yellow('Creating: ')
+          .green(podcastConfig.slug);
+      }
+      // Override all fields from the YAML file.
+      podcast = podcastConfig;
+      // Update the episode list.
+      if (podcast.rssUrl) {
+        const newPodcast = await readPodcastFeed(podcast.rssUrl);
+        podcast.episodes = newPodcast.episodes;
+        term(' - ').yellow(podcast.episodes?.length)(' episodes');
+      }
+      term('\n')
+      setPodcast(podcast);
+    }
+    term('Reloaded config from ').green(filename);
   });
 
 program

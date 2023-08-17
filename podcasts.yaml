@@ -1,0 +1,123 @@
+podcasts:
+  - description: >-
+      Design is everywhere in our lives, perhaps most importantly in the places
+      where we've just stopped noticing. 99% Invisible is a weekly exploration
+      of the process and power of design and architecture. From award winning
+      producer Roman Mars. Learn more at 99percentinvisible.org.
+    imageUrl: >-
+      https://image.simplecastcdn.com/images/00c81e60-45f9-4643-9fed-2184b2b6a3d3/5fbdc9d4-22ab-4b3a-a2bd-72777b15c30c/3000x3000/stitcher-cover-99percentinvisible-3000x3000-r2021-final.jpg?aid=rss_feed
+    rssUrl: https://feeds.simplecast.com/BqbsxVfO
+    slug: 99-invisible
+    title: 99% Invisible
+    url: https://www.stitcher.com
+    corpusId: '1100'
+  - imageUrl: >-
+      https://wordpress.wbur.org/wp-content/uploads/2017/12/endless-thread-logo-3000x3000-1.jpg
+    rssUrl: https://rss.wbur.org/endlessthread/podcast
+    slug: endless-thread
+    title: Endless Thread
+    url: https://www.wbur.org/podcasts/endlessthread
+    corpusId: '1101'
+    description: >-
+      Hosts Ben Brock Johnson and Amory Sivertson dig into the internet's vast
+      and curious ecosystem of online communities to find untold histories,
+      unsolved mysteries, and other jaw-dropping stories online and IRL. 
+  - slug: front-end-happy-hour
+    title: Front End Happy Hour
+    url: http://frontendhappyhour.com/
+    corpusId: '1095'
+    description: >-
+      A podcast featuring panelists of engineers from Netflix, Twitch, &
+      Atlassian talking over drinks about all things Front End development.
+    imageUrl: https://i1.sndcdn.com/avatars-000287353351-tdlqh4-original.jpg
+    rssUrl: https://feeds.soundcloud.com/users/soundcloud:users:206137365/sounds.rss
+  - imageUrl: >-
+      https://images.transistor.fm/file/transistor/images/show/13470/full_1597943814-artwork.jpg
+    rssUrl: https://feeds.transistor.fm/full-stack-radio
+    slug: full-stack-radio
+    title: Full Stack Radio
+    url: http://fullstackradio.com
+    corpusId: '1102'
+    description: >-
+      A podcast for developers interested in building great software products.
+      Every episode, Adam Wathan is joined by a guest to talk about everything
+      from product design and user experience to unit testing and system
+      administration.
+  - url: https://www.latent.space/podcast
+    corpusId: '1103'
+    description: >-
+      The podcast by and for AI Engineers! We are the first place over 50k
+      developers hear news and interviews about Software 3.0 - Foundation Models
+      changing every domain in Code Generation, Computer Vision, AI Agents, and
+      more, directly from the founders, builders, and thinkers involved in
+      pushing the cutting edge. Striving to give you both the definitive take on
+      the Current Thing down to the first introduction to the tech you'll be
+      using in the next 3 months! We break news and exclusive interviews from
+      tiny (George Hotz), Databricks, Glean, Replit, Roboflow, MosaicML, UC
+      Berkeley, OpenAI, and more. <br/><br/><a
+      href="https://www.latent.space?utm_medium=podcast">www.latent.space</a>
+    imageUrl: >-
+      https://substackcdn.com/feed/podcast/1084089/92120159a90420fb694c09dfd0a904e8.jpg
+    rssUrl: https://api.substack.com/feed/podcast/1084089.rss
+    slug: latent-space
+    title: >-
+      Latent Space: The AI Engineer Podcast — CodeGen, Agents, Computer Vision,
+      Data Science, AI UX and all things Software 3.0
+  - description: >-
+      <p>Formerly known as &ldquo;KEXP&rsquo;s Live Performances,&rdquo; Live on
+      KEXP brings you the very best of KEXP&rsquo;s world-renowned live
+      in-studio and remote performances. Each week, we&rsquo;ll bring you a new
+      live session, from emerging artists to well-established acts, spanning
+      styles, genres and cultures. Full video of all Live on KEXP performances
+      available at youtube.com/kexp.</p>
+    imageUrl: >-
+      https://www.omnycontent.com/d/playlist/bad5d079-8dcb-4630-8770-aa090049131d/18f3a48e-1c64-43e8-96e9-aa40002038ee/856f4314-821f-46ca-bc8e-aa40002038f2/image.jpg?t=1585780431&size=Large
+    rssUrl: >-
+      https://www.omnycontent.com/d/playlist/bad5d079-8dcb-4630-8770-aa090049131d/18f3a48e-1c64-43e8-96e9-aa40002038ee/856f4314-821f-46ca-bc8e-aa40002038f2/podcast.rss
+    slug: live-on-kexp
+    title: Live on KEXP
+    url: https://www.kexp.org/podcasts/live-on-kexp/
+    corpusId: '1104'
+  - url: https://www.omnibusproject.com
+    corpusId: '95'
+    description: >
+      Twice a week, Ken Jennings and John Roderick add a new entry to the
+      OMNIBUS, an encyclopedic reference work of strange-but-true stories that
+      they are compiling as a time capsule for future generations.
+    title: Omnibus
+    rssUrl: https://feeds.fireside.fm/omnibus/rss
+    slug: omnibus
+    suggestedQueries:
+      - What is the Stone of Scone?
+      - Who is Magic Alex?
+    imageUrl: >-
+      https://assets.fireside.fm/file/fireside-images/podcasts/images/8/8658dd0c-baa7-4412-9466-918650a0013d/cover.jpg
+  - url: http://www.pitchforkeconomics.com
+    corpusId: '6'
+    description: >-
+      Any society that allows itself to become radically unequal eventually
+      collapses into an uprising or a police state—or both. Join venture
+      capitalist Nick Hanauer and some of the world’s leading economic and
+      political thinkers in an exploration of who gets what and why. Turns out,
+      everything you learned about economics is wrong. And if we don’t do
+      something about rising inequality, the pitchforks are coming.
+    imageUrl: >-
+      https://megaphone.imgix.net/podcasts/c5ce4202-f4f7-11e8-8f50-a71b647a9c02/image/uploads_2F1544112383285-xd2w7wakqq-f89e648a50216511f778c9fb1840c8da_2FLogo2000x2000.jpg?ixlib=rails-4.3.1&max-w=3000&max-h=3000&fit=crop&auto=format,compress
+    rssUrl: https://feeds.megaphone.fm/pitchforkeconomics
+    slug: pitchfork-economics-with-nick-hanauer
+    title: Pitchfork Economics with Nick Hanauer
+  - url: https://www.npr.org/podcasts/510351/short-wave
+    corpusId: '1106'
+    description: >-
+      New discoveries, everyday mysteries, and the science behind the headlines
+      — all in about 10 minutes. It's science for everyone, using a lot of
+      creativity and a little humor. Join hosts Emily Kwong, Aaron Scott and
+      Regina Barber for science on a different wavelength.<br><br><em>If you're
+      hooked, try Short Wave Plus. Your subscription supports the show and
+      unlocks a sponsor-free feed. Learn more at
+      </em><em>plus.npr.org/</em><em>shortwave</em>
+    imageUrl: >-
+      https://media.npr.org/assets/img/2022/09/23/short-wave_tile_npr-network-01_sq-517382b4b8fd0ab48ea9c781253f9992eab733dc.jpg?s=1400&c=66&f=jpg
+    rssUrl: https://feeds.npr.org/510351/podcast.xml
+    slug: short-wave
+    title: Short Wave
