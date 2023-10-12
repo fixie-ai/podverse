@@ -9,7 +9,7 @@ import Parser from 'rss-parser';
 import terminal from 'terminal-kit';
 const { terminal: term } = terminal;
 import slug from 'slug';
-import { Episode, Podcast } from 'podverse-types';
+import { Episode, Podcast, GetPodcast, SetPodcast, ListPodcasts } from 'podverse-types';
 import { dump, load } from 'js-yaml';
 import fs from 'fs';
 
@@ -19,37 +19,6 @@ interface ConfigFile {
 }
 
 program.name('ingester').version('0.0.1').description('Ingest a podcast into the Podverse app.');
-
-/** Return metadata for the given podcast. */
-async function getPodcast(slug: string): Promise<Podcast> {
-  const podcastData = await kv.json.get(`podcasts:${slug}`, '$');
-  if (!podcastData) {
-    throw new Error(`Podcast with slug ${slug} not found.`);
-  }
-  return podcastData[0] as Podcast;
-}
-
-/** Set metadata for the given podcast. */
-async function setPodcast(podcast: Podcast) {
-  await kv.json.set(`podcasts:${podcast.slug}`, '$', podcast);
-}
-
-/** Return a list of all podcast slugs. */
-async function listPodcasts(): Promise<string[]> {
-  const slugs: string[] = [];
-  let cursor = 0;
-  do {
-    const podcasts = await kv.scan(cursor, { match: `podcasts:*` });
-    cursor = podcasts[0];
-    const keys = podcasts[1];
-    keys.map((key: string) => {
-      // Strip the "podcasts:" prefix.
-      key = key.substring(9);
-      slugs.push(key);
-    });
-  } while (cursor !== 0);
-  return slugs;
-}
 
 /** Read the given RSS feed URL and return it as a Podcast object. */
 async function readPodcastFeed(podcastUrl: string, podcastSlug?: string): Promise<Podcast> {
@@ -121,7 +90,7 @@ program
     if (options.suggestedQuery) {
       newPodcast.suggestedQueries = options.suggestedQuery;
     }
-    setPodcast(newPodcast);
+    SetPodcast(newPodcast);
     console.log(JSON.stringify(newPodcast, null, 4));
   });
 
@@ -129,9 +98,9 @@ program
   .command('list')
   .description('List all podcasts in the Podverse app.')
   .action(async () => {
-    const slugs = await listPodcasts();
+    const slugs = await ListPodcasts();
     for (const slug of slugs) {
-      const podcast = await getPodcast(slug);
+      const podcast = await GetPodcast(slug);
       term(slug + ': ')
         .green(podcast.title + ' ')
         .blue(podcast.rssUrl);
@@ -154,7 +123,7 @@ program
   .description('Get a podcast from the Podverse app.')
   .argument('<slug>', 'Slug of the podcast to get.')
   .action(async (slug: string) => {
-    const podcast = await getPodcast(slug);
+    const podcast = await GetPodcast(slug);
     console.log(JSON.stringify(podcast, null, 4));
   });
 
@@ -166,9 +135,9 @@ program
     const config: ConfigFile = {
       podcasts: [] as Podcast[],
     };
-    const slugs = await listPodcasts();
+    const slugs = await ListPodcasts();
     for (const slug of slugs) {
-      const podcast = await getPodcast(slug);
+      const podcast = await GetPodcast(slug);
       // Strip out the list of episodes, since these are populated from the RSS feed.
       podcast.episodes = undefined;
       config.podcasts.push(podcast);
@@ -191,7 +160,7 @@ program
       let podcast = null;
       try {
         // Check to see if it exists.
-        podcast = await getPodcast(podcastConfig.slug);
+        podcast = await GetPodcast(podcastConfig.slug);
         term('Updating: ').green(podcastConfig.slug);
       } catch (err) {
         // Assume the podcast does not exist, let's create it.
@@ -206,7 +175,7 @@ program
         term(' - ').yellow(podcast.episodes?.length)(' episodes');
       }
       term('\n');
-      setPodcast(podcast);
+      SetPodcast(podcast);
     }
     term('Reloaded config from ').green(filename);
   });
@@ -230,10 +199,10 @@ program
     if (slug) {
       slugs.push(slug);
     } else {
-      slugs = await listPodcasts();
+      slugs = await ListPodcasts();
     }
     for (const slug of slugs) {
-      const podcast = await getPodcast(slug);
+      const podcast = await GetPodcast(slug);
       if (!podcast.rssUrl) {
         term('Unable to refresh, as podcast is missing RSS URL: ').red(slug + '\n');
         continue;
@@ -242,7 +211,7 @@ program
       if (!options.force) {
         newPodcast = mergePodcasts(podcast, newPodcast);
       }
-      setPodcast(newPodcast);
+      SetPodcast(newPodcast);
       const diff = (newPodcast.episodes?.length ?? 0) - (podcast.episodes?.length ?? 0);
       term('Refreshed podcast: ').green(slug)(` (${newPodcast.episodes?.length} episodes, ${diff} new)\n`);
     }

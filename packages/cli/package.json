@@ -1,0 +1,39 @@
+{
+  "name": "podverse-cli",
+  "version": "0.1.0",
+  "private": true,
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/main.js",
+    "build-start": "yarn run build && yarn run start",
+    "format": "prettier --write .",
+    "lint": "eslint ."
+  },
+  "files": [
+    "dist"
+  ],
+  "packageManager": "yarn@3.6.0",
+  "dependencies": {
+    "@vercel/kv": "^0.2.2",
+    "@vercel/node": "^2.15.5",
+    "commander": "^11.0.0",
+    "eslint": "^8.44.0",
+    "js-yaml": "^4.1.0",
+    "podverse-types": "*",
+    "rss-parser": "^3.13.0",
+    "slug": "^8.2.2",
+    "terminal-kit": "^3.0.0"
+  },
+  "devDependencies": {
+    "@types/js-yaml": "^4.0.5",
+    "@types/node": "^20.4.1",
+    "@types/slug": "^5.0.3",
+    "@types/terminal-kit": "^2.5.1",
+    "@typescript-eslint/eslint-plugin": "^6.0.0",
+    "@typescript-eslint/parser": "^6.0.0",
+    "prettier": "^3.0.0",
+    "typescript": "5.1.3"
+  }
+}

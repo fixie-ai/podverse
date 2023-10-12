@@ -1,5 +1,5 @@
 {
-  "name": "ingester",
+  "name": "podverse-preprocessor",
   "version": "0.1.0",
   "private": true,
   "license": "MIT",
