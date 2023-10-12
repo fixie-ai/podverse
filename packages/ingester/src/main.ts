@@ -1,3 +1,8 @@
+/**
+ * This is a command-line utility to manage the set of Podcasts
+ * in the Podverse app.
+ */
+
 import { kv } from '@vercel/kv';
 import { program } from 'commander';
 import Parser from 'rss-parser';
@@ -75,6 +80,27 @@ async function readPodcastFeed(podcastUrl: string, podcastSlug?: string): Promis
     imageUrl: feed.image?.url ?? feed.itunes?.image,
     episodes: episodes,
   };
+  return newPodcast;
+}
+
+/** Merge two podcasts by keeping existing epiodes from oldPostcast. */
+function mergePodcasts(oldPodcast: Podcast, newPodcast: Podcast): Podcast {
+  // Retain old corpus ID if one was already set for this podcast, since this does not
+  // come from the RSS feed.
+  if (oldPodcast.corpusId) {
+    newPodcast.corpusId = oldPodcast.corpusId;
+  }
+  newPodcast.episodes = newPodcast.episodes?.map((newEpisode) => {
+    // If the episode exists in oldPodcast, use that.
+    const oldEpisode = oldPodcast.episodes?.find((episode) => {
+      return episode.url === newEpisode.url;
+    });
+    if (oldEpisode) {
+      return oldEpisode;
+    } else {
+      return newEpisode;
+    }
+  });
   return newPodcast;
 }
 
@@ -169,9 +195,7 @@ program
         term('Updating: ').green(podcastConfig.slug);
       } catch (err) {
         // Assume the podcast does not exist, let's create it.
-        term()
-          .yellow('Creating: ')
-          .green(podcastConfig.slug);
+        term().yellow('Creating: ').green(podcastConfig.slug);
       }
       // Override all fields from the YAML file.
       podcast = podcastConfig;
@@ -181,7 +205,7 @@ program
         podcast.episodes = newPodcast.episodes;
         term(' - ').yellow(podcast.episodes?.length)(' episodes');
       }
-      term('\n')
+      term('\n');
       setPodcast(podcast);
     }
     term('Reloaded config from ').green(filename);
@@ -200,7 +224,8 @@ program
   .command('refresh')
   .description('Refresh the list of podcasts.')
   .argument('[slug]', 'Slug of the podcast to refresh. If not specified, all podcasts will be refreshed.')
-  .action(async (slug: string) => {
+  .option('-f, --force', 'Force re-ingestion of podcast episodes.')
+  .action(async (slug: string, options) => {
     let slugs: string[] = [];
     if (slug) {
       slugs.push(slug);
@@ -213,14 +238,13 @@ program
         term('Unable to refresh, as podcast is missing RSS URL: ').red(slug + '\n');
         continue;
       }
-      const newPodcast = await readPodcastFeed(podcast.rssUrl);
-      // Retain old corpus ID if one was already set for this podcast, since this does not
-      // come from the RSS feed.
-      if (podcast.corpusId) {
-        newPodcast.corpusId = podcast.corpusId;
+      let newPodcast = await readPodcastFeed(podcast.rssUrl);
+      if (!options.force) {
+        newPodcast = mergePodcasts(podcast, newPodcast);
       }
       setPodcast(newPodcast);
-      term('Refreshed podcast: ').green(slug + '\n');
+      const diff = (newPodcast.episodes?.length ?? 0) - (podcast.episodes?.length ?? 0);
+      term('Refreshed podcast: ').green(slug)(` (${newPodcast.episodes?.length} episodes, ${diff} new)\n`);
     }
   });
 
