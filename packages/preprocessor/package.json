@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "build": "tsc",
-    "start": "node dist/main.js",
+    "start": "node dist/transcribe.js",
     "build-start": "yarn run build && yarn run start",
     "format": "prettier --write .",
     "lint": "eslint ."
@@ -16,6 +16,7 @@
   ],
   "packageManager": "yarn@3.6.0",
   "dependencies": {
+    "@deepgram/sdk": "^2.4.0",
     "@vercel/kv": "^0.2.2",
     "@vercel/node": "^2.15.5",
     "commander": "^11.0.0",
