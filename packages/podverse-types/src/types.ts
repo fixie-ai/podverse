@@ -11,12 +11,13 @@ export type Podcast = {
   rssUrl?: string;
   imageUrl?: string;
   corpusId?: string;
-  episodes?: Episode[];
   suggestedQueries?: string[];
 };
 
 /** Represents metadata for a single episode. */
 export type Episode = {
+  slug: string;
+  podcastSlug: string;
   title: string;
   description?: string;
   url?: string;

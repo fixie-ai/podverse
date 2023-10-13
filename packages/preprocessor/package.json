@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "build": "tsc",
-    "start": "node dist/transcribe.js",
+    "start": "node dist/main.js",
     "build-start": "yarn run build && yarn run start",
     "format": "prettier --write .",
     "lint": "eslint ."
@@ -20,12 +20,14 @@
     "@google-cloud/storage": "^7.3.0",
     "@vercel/kv": "^0.2.2",
     "@vercel/node": "^2.15.5",
-    "commander": "^11.0.0",
+    "commander": "^11.1.0",
+    "dotenv": "^16.3.1",
     "eslint": "^8.44.0",
     "js-yaml": "^4.1.0",
     "podverse-types": "*",
     "rss-parser": "^3.13.0",
     "slug": "^8.2.2",
+    "slugify": "^1.6.6",
     "terminal-kit": "^3.0.0"
   },
   "devDependencies": {

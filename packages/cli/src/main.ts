@@ -1,7 +1,10 @@
 /**
- * This is a command-line utility to manage the set of Podcasts
- * in the Podverse app.
+ * This is a command-line utility to manage the set of Podcasts in the Podverse app.
  */
+
+
+import { config } from 'dotenv';
+config();
 
 import { kv } from '@vercel/kv';
 import { program } from 'commander';
@@ -9,7 +12,7 @@ import Parser from 'rss-parser';
 import terminal from 'terminal-kit';
 const { terminal: term } = terminal;
 import slug from 'slug';
-import { Episode, Podcast, GetPodcast, SetPodcast, ListPodcasts } from 'podverse-types';
+import { Episode, Podcast, GetPodcast, SetPodcast, ListPodcasts, GetEpisode, SetEpisode, ListEpisodes } from 'podverse-types';
 import { dump, load } from 'js-yaml';
 import fs from 'fs';
 
@@ -18,10 +21,10 @@ interface ConfigFile {
   podcasts: Podcast[];
 }
 
-program.name('ingester').version('0.0.1').description('Ingest a podcast into the Podverse app.');
+program.name('podverse-cli').version('0.0.1').description('Ingest a podcast into the Podverse app.');
 
 /** Read the given RSS feed URL and return it as a Podcast object. */
-async function readPodcastFeed(podcastUrl: string, podcastSlug?: string): Promise<Podcast> {
+async function readPodcastFeed(podcastUrl: string, podcastSlug?: string): Promise<[Podcast, Episode[]]> {
   // Read the RSS feed metadata.
   const parser = new Parser();
   const feed = await parser.parseURL(podcastUrl);
@@ -31,6 +34,7 @@ async function readPodcastFeed(podcastUrl: string, podcastSlug?: string): Promis
   const titleSlug = podcastSlug ?? slug(feed.title!);
   const episodes: Episode[] = feed.items.map((entry) => {
     return {
+      slug: slug(entry.title ?? 'Untitled'),
       title: entry.title ?? 'Untitled',
       description: entry.description ?? entry.itunes.subtitle,
       url: entry.link,
@@ -47,12 +51,11 @@ async function readPodcastFeed(podcastUrl: string, podcastSlug?: string): Promis
     url: feed.link,
     rssUrl: podcastUrl,
     imageUrl: feed.image?.url ?? feed.itunes?.image,
-    episodes: episodes,
   };
-  return newPodcast;
+  return [newPodcast, episodes];
 }
 
-/** Merge two podcasts by keeping existing epiodes from oldPostcast. */
+/** Merge two podcasts by keeping existing epiodes from oldPodcast. */
 function mergePodcasts(oldPodcast: Podcast, newPodcast: Podcast): Podcast {
   // Retain old corpus ID if one was already set for this podcast, since this does not
   // come from the RSS feed.
@@ -77,21 +80,13 @@ program
   .command('ingest')
   .description('Ingest a podcast into the Podverse app.')
   .argument('<podcastUrl>', 'URL of the podcast RSS feed.')
-  .option('-f, --force', 'Force ingestion even if podcast already exists.')
-  .option('--corpus <corpusId>', 'Fixie Corpus ID to use for this podcast.')
-  .option('--suggestedQuery <queries...>', 'Suggested queries to use for this podcast.')
-  .action(async (podcastUrl: string, options) => {
-    const newPodcast = await readPodcastFeed(podcastUrl);
-    // TODO: Create Fixie corpus and add this information to the Podcast object,
-    // if --corpus is not specified.
-    if (options.corpus) {
-      newPodcast.corpusId = options.corpus;
-    }
-    if (options.suggestedQuery) {
-      newPodcast.suggestedQueries = options.suggestedQuery;
-    }
+  .action(async (podcastUrl: string) => {
+    const [newPodcast, episodes] = await readPodcastFeed(podcastUrl);
     SetPodcast(newPodcast);
-    console.log(JSON.stringify(newPodcast, null, 4));
+    for (const episode of episodes) {
+      SetEpisode(episode);
+    }
+    term('Ingested podcast: ').green(newPodcast.slug)(` (${episodes.length} episodes)\n`);
   });
 
 program
@@ -109,12 +104,8 @@ program
       } else {
         term.red(' (no corpus)');
       }
-      if (podcast.episodes) {
-        term(` - ${podcast.episodes.length} episodes`);
-      } else {
-        term.red(' - no episodes');
-      }
-      term('\n');
+      const episodes = await ListEpisodes(slug);
+      term(` - ${episodes.length} episodes\n`);
     }
   });
 
@@ -136,12 +127,7 @@ program
       podcasts: [] as Podcast[],
     };
     const slugs = await ListPodcasts();
-    for (const slug of slugs) {
-      const podcast = await GetPodcast(slug);
-      // Strip out the list of episodes, since these are populated from the RSS feed.
-      podcast.episodes = undefined;
-      config.podcasts.push(podcast);
-    }
+    config.podcasts = await Promise.all(slugs.map(async (slug) => await GetPodcast(slug)));
     fs.writeFile(filename, dump(config), (err) => {
       if (err) {
         console.log(err);
