@@ -2,6 +2,7 @@
 
 import pkg from '@deepgram/sdk';
 const { Deepgram } = pkg;
+import { Storage } from '@google-cloud/storage';
 import { PrerecordedTranscriptionResponse } from '@deepgram/sdk/dist/types';
 
 import { Podcast, Episode } from 'podverse-types';
@@ -31,6 +32,17 @@ export async function Transcribe(audioUrl: string): Promise<string> {
     result.results?.channels[0].alternatives[0].transcript ||
     '';
   return transcript;
+}
+
+/** Upload the given file to GCS. Returns the GCS URL of the uploaded file. */
+export async function UploadToGCS(bucketName: string, fileName: string, fileContents: string): Promise<string> {
+  const storage = new Storage();
+  const bucket = storage.bucket(bucketName);
+  const file = bucket.file(fileName);
+  await file.save(fileContents);
+  // Note that signed URLs are only good for up to 7 days, but we want these links to be permanent,
+  // so we should store things in a publicly readable bucket.
+  return `https://storage.googleapis.com/${bucketName}/${fileName}`;
 }
 
 const url =

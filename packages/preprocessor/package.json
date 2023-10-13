@@ -17,6 +17,7 @@
   "packageManager": "yarn@3.6.0",
   "dependencies": {
     "@deepgram/sdk": "^2.4.0",
+    "@google-cloud/storage": "^7.3.0",
     "@vercel/kv": "^0.2.2",
     "@vercel/node": "^2.15.5",
     "commander": "^11.0.0",
