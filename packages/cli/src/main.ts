@@ -2,7 +2,6 @@
  * This is a command-line utility to manage the set of Podcasts in the Podverse app.
  */
 
-
 import { config } from 'dotenv';
 config();
 
@@ -12,7 +11,9 @@ import Parser from 'rss-parser';
 import terminal from 'terminal-kit';
 const { terminal: term } = terminal;
 import slug from 'slug';
-import { Episode, Podcast, GetPodcast, SetPodcast, ListPodcasts, GetEpisode, SetEpisode, ListEpisodes } from 'podverse-types';
+import { Episode, Podcast } from 'podverse-types';
+import { GetPodcast, SetPodcast, ListPodcasts, GetEpisode, SetEpisode, ListEpisodes } from './client.js';
+//import { ProcessPodcast } from './process.js';
 import { dump, load } from 'js-yaml';
 import fs from 'fs';
 
@@ -35,6 +36,7 @@ async function readPodcastFeed(podcastUrl: string, podcastSlug?: string): Promis
   const episodes: Episode[] = feed.items.map((entry) => {
     return {
       slug: slug(entry.title ?? 'Untitled'),
+      podcastSlug: titleSlug,
       title: entry.title ?? 'Untitled',
       description: entry.description ?? entry.itunes.subtitle,
       url: entry.link,
@@ -56,15 +58,20 @@ async function readPodcastFeed(podcastUrl: string, podcastSlug?: string): Promis
 }
 
 /** Merge two podcasts by keeping existing epiodes from oldPodcast. */
-function mergePodcasts(oldPodcast: Podcast, newPodcast: Podcast): Podcast {
+function mergePodcasts(
+  oldPodcast: Podcast,
+  oldEpisodes: Episode[],
+  newPodcast: Podcast,
+  newEpisodes: Episode[],
+): [Podcast, Episode[]] {
   // Retain old corpus ID if one was already set for this podcast, since this does not
   // come from the RSS feed.
   if (oldPodcast.corpusId) {
     newPodcast.corpusId = oldPodcast.corpusId;
   }
-  newPodcast.episodes = newPodcast.episodes?.map((newEpisode) => {
+  const episodes = newEpisodes?.map((newEpisode) => {
     // If the episode exists in oldPodcast, use that.
-    const oldEpisode = oldPodcast.episodes?.find((episode) => {
+    const oldEpisode = oldEpisodes.find((episode) => {
       return episode.url === newEpisode.url;
     });
     if (oldEpisode) {
@@ -73,7 +80,7 @@ function mergePodcasts(oldPodcast: Podcast, newPodcast: Podcast): Podcast {
       return newEpisode;
     }
   });
-  return newPodcast;
+  return [newPodcast, episodes];
 }
 
 program
@@ -154,13 +161,6 @@ program
       }
       // Override all fields from the YAML file.
       podcast = podcastConfig;
-      // Update the episode list.
-      if (podcast.rssUrl) {
-        const newPodcast = await readPodcastFeed(podcast.rssUrl);
-        podcast.episodes = newPodcast.episodes;
-        term(' - ').yellow(podcast.episodes?.length)(' episodes');
-      }
-      term('\n');
       SetPodcast(podcast);
     }
     term('Reloaded config from ').green(filename);
@@ -189,17 +189,41 @@ program
     }
     for (const slug of slugs) {
       const podcast = await GetPodcast(slug);
+      const episodes = await Promise.all(
+        (await ListEpisodes(slug)).map(async (episodeSlug) => await GetEpisode(slug, episodeSlug)),
+      );
       if (!podcast.rssUrl) {
         term('Unable to refresh, as podcast is missing RSS URL: ').red(slug + '\n');
         continue;
       }
-      let newPodcast = await readPodcastFeed(podcast.rssUrl);
+      const [newPodcast, newEpisodes] = await readPodcastFeed(podcast.rssUrl);
       if (!options.force) {
-        newPodcast = mergePodcasts(podcast, newPodcast);
+        const [setPodcast, setEpisodes] = mergePodcasts(podcast, episodes, newPodcast, newEpisodes);
+        SetPodcast(setPodcast);
+        for (const episode of setEpisodes) {
+          SetEpisode(episode);
+        }
+      } else {
+        SetPodcast(newPodcast);
       }
-      SetPodcast(newPodcast);
-      const diff = (newPodcast.episodes?.length ?? 0) - (podcast.episodes?.length ?? 0);
+      const diff = ((await ListEpisodes(newPodcast.slug)).length ?? 0) - (episodes?.length ?? 0);
       term('Refreshed podcast: ').green(slug)(` (${newPodcast.episodes?.length} episodes, ${diff} new)\n`);
+    }
+  });
+
+program
+  .command('process [podcast]')
+  .description('Process the given podcast, or all podcasts if not specified.')
+  .option('--no-transcribe', 'Disable audio transcription.')
+  .action(async (podcast: string | null, opts) => {
+    const podcasts = podcast ? [podcast] : await ListPodcasts();
+    term(opts);
+    for (const podcastSlug of podcasts) {
+      term('Processing: ').green(`${podcastSlug}...\n`);
+      //const podcast = await GetPodcast(podcastSlug);
+      //const processed = await ProcessPodcast(podcast, { transcribe: opts.transcribe });
+      //await SetPodcast(processed);
+      term('Finished processing: ').green(`${podcastSlug}\n`);
     }
   });
 

@@ -3865,13 +3865,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"commander@npm:^11.1.0":
-  version: 11.1.0
-  resolution: "commander@npm:11.1.0"
-  checksum: fd1a8557c6b5b622c89ecdfde703242ab7db3b628ea5d1755784c79b8e7cb0d74d65b4a262289b533359cd58e1bfc0bf50245dfbcd2954682a6f367c828b79ef
-  languageName: node
-  linkType: hard
-
 "commander@npm:^4.0.0":
   version: 4.1.1
   resolution: "commander@npm:4.1.1"
@@ -8331,6 +8324,8 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "podverse-cli@workspace:packages/cli"
   dependencies:
+    "@deepgram/sdk": ^2.4.0
+    "@google-cloud/storage": ^7.3.0
     "@types/js-yaml": ^4.0.5
     "@types/node": ^20.4.1
     "@types/slug": ^5.0.3
@@ -8340,9 +8335,10 @@ __metadata:
     "@vercel/kv": ^0.2.2
     "@vercel/node": ^2.15.5
     commander: ^11.0.0
+    dotenv: ^16.3.1
     eslint: ^8.44.0
     js-yaml: ^4.1.0
-    podverse-types: "*"
+    podverse-types: "workspace:*"
     prettier: ^3.0.0
     rss-parser: ^3.13.0
     slug: ^8.2.2
@@ -8366,35 +8362,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"podverse-preprocessor@workspace:packages/preprocessor":
-  version: 0.0.0-use.local
-  resolution: "podverse-preprocessor@workspace:packages/preprocessor"
-  dependencies:
-    "@deepgram/sdk": ^2.4.0
-    "@google-cloud/storage": ^7.3.0
-    "@types/js-yaml": ^4.0.5
-    "@types/node": ^20.4.1
-    "@types/slug": ^5.0.3
-    "@types/terminal-kit": ^2.5.1
-    "@typescript-eslint/eslint-plugin": ^6.0.0
-    "@typescript-eslint/parser": ^6.0.0
-    "@vercel/kv": ^0.2.2
-    "@vercel/node": ^2.15.5
-    commander: ^11.1.0
-    dotenv: ^16.3.1
-    eslint: ^8.44.0
-    js-yaml: ^4.1.0
-    podverse-types: "*"
-    prettier: ^3.0.0
-    rss-parser: ^3.13.0
-    slug: ^8.2.2
-    slugify: ^1.6.6
-    terminal-kit: ^3.0.0
-    typescript: 5.1.3
-  languageName: unknown
-  linkType: soft
-
-"podverse-types@*, podverse-types@workspace:packages/podverse-types":
+"podverse-types@*, podverse-types@workspace:*, podverse-types@workspace:packages/podverse-types":
   version: 0.0.0-use.local
   resolution: "podverse-types@workspace:packages/podverse-types"
   dependencies:
@@ -9398,13 +9366,6 @@ __metadata:
   bin:
     slug: cli.js
   checksum: eb2fbf8d13df0a94f09ffd7c20e02d5e88c1fdd51e178fe8e670937747dec5a97efd172956b914efd5eb3fadd65a306a68f4eed0327a8c5c9a8af30f2c95a46b
-  languageName: node
-  linkType: hard
-
-"slugify@npm:^1.6.6":
-  version: 1.6.6
-  resolution: "slugify@npm:1.6.6"
-  checksum: 04773c2d3b7aea8d2a61fa47cc7e5d29ce04e1a96cbaec409da57139df906acb3a449fac30b167d203212c806e73690abd4ff94fbad0a9a7b7ea109a2a638ae9
   languageName: node
   linkType: hard
 

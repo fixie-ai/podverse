@@ -1,7 +1,7 @@
 /** This module has client functions for accessing the podcast KV metadata store. */
 
 import { kv } from '@vercel/kv';
-import { Episode, Podcast } from './types.js';
+import { Episode, Podcast } from '../../podverse-types/src/types.js';
 
 /** Return metadata for the given podcast. */
 export async function GetPodcast(slug: string): Promise<Podcast> {
