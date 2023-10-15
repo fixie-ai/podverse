@@ -1,7 +1,7 @@
 /** This module has client functions for accessing the podcast KV metadata store. */
 
 import { kv } from '@vercel/kv';
-import { Episode, Podcast } from '../../podverse-types/src/types.js';
+import { Episode, Podcast } from 'podverse-types';
 
 /** Return metadata for the given podcast. */
 export async function GetPodcast(slug: string): Promise<Podcast> {
@@ -9,12 +9,33 @@ export async function GetPodcast(slug: string): Promise<Podcast> {
   if (!podcastData) {
     throw new Error(`Podcast with slug ${slug} not found.`);
   }
-  return podcastData[0] as Podcast;
+  const podcast = podcastData[0] as Podcast;
+  // Read episodes.
+  podcast.episodes = await Promise.all(
+    (await ListEpisodes(slug)).map((episodeSlug) => {
+      return GetEpisode(slug, episodeSlug);
+    }),
+  );
+  return podcast;
 }
 
 /** Set metadata for the given podcast. */
 export async function SetPodcast(podcast: Podcast) {
-  await kv.json.set(`podcasts:${podcast.slug}`, '$', podcast);
+  // Don't write episodes to the Podcast entry.
+  const writePodcast = { ...podcast, episodes: null };
+  await kv.json.set(`podcasts:${podcast.slug}`, '$', writePodcast);
+  // Write episodes separately.
+  await podcast.episodes?.map(async (episode: Episode) => {
+    await SetEpisode(episode);
+  });
+}
+
+export async function DeletePodcast(slug: string) {
+  const podcast = await GetPodcast(slug);
+  await podcast.episodes?.map(async (episode: Episode) => {
+    await DeleteEpisode(episode);
+  });
+  await kv.del(`podcasts:${slug}`);
 }
 
 /** Return a list of all podcast slugs. */
@@ -46,6 +67,10 @@ export async function GetEpisode(podcastSlug: string, episodeSlug: string): Prom
 /** Set metadata for the given episode. */
 export async function SetEpisode(episode: Episode) {
   await kv.json.set(`podcasts:${episode.podcastSlug}:${episode.slug}`, '$', episode);
+}
+
+export async function DeleteEpisode(episode: Episode) {
+  await kv.del(`podcasts:${episode.podcastSlug}:${episode.slug}`);
 }
 
 /** Return a list of all episodes in this Podcast. */

@@ -12,6 +12,7 @@ export type Podcast = {
   imageUrl?: string;
   corpusId?: string;
   suggestedQueries?: string[];
+  episodes?: Episode[];
 };
 
 /** Represents metadata for a single episode. */

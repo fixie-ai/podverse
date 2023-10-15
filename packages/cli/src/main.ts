@@ -5,14 +5,13 @@
 import { config } from 'dotenv';
 config();
 
-import { kv } from '@vercel/kv';
 import { program } from 'commander';
 import Parser from 'rss-parser';
 import terminal from 'terminal-kit';
 const { terminal: term } = terminal;
 import slug from 'slug';
 import { Episode, Podcast } from 'podverse-types';
-import { GetPodcast, SetPodcast, ListPodcasts, GetEpisode, SetEpisode, ListEpisodes } from './client.js';
+import { GetPodcast, SetPodcast, DeletePodcast, ListPodcasts, SetEpisode } from './client.js';
 //import { ProcessPodcast } from './process.js';
 import { dump, load } from 'js-yaml';
 import fs from 'fs';
@@ -25,7 +24,7 @@ interface ConfigFile {
 program.name('podverse-cli').version('0.0.1').description('Ingest a podcast into the Podverse app.');
 
 /** Read the given RSS feed URL and return it as a Podcast object. */
-async function readPodcastFeed(podcastUrl: string, podcastSlug?: string): Promise<[Podcast, Episode[]]> {
+async function readPodcastFeed(podcastUrl: string, podcastSlug?: string): Promise<Podcast> {
   // Read the RSS feed metadata.
   const parser = new Parser();
   const feed = await parser.parseURL(podcastUrl);
@@ -53,25 +52,21 @@ async function readPodcastFeed(podcastUrl: string, podcastSlug?: string): Promis
     url: feed.link,
     rssUrl: podcastUrl,
     imageUrl: feed.image?.url ?? feed.itunes?.image,
+    episodes,
   };
-  return [newPodcast, episodes];
+  return newPodcast;
 }
 
 /** Merge two podcasts by keeping existing epiodes from oldPodcast. */
-function mergePodcasts(
-  oldPodcast: Podcast,
-  oldEpisodes: Episode[],
-  newPodcast: Podcast,
-  newEpisodes: Episode[],
-): [Podcast, Episode[]] {
+function mergePodcasts(oldPodcast: Podcast, newPodcast: Podcast): Podcast {
   // Retain old corpus ID if one was already set for this podcast, since this does not
   // come from the RSS feed.
   if (oldPodcast.corpusId) {
     newPodcast.corpusId = oldPodcast.corpusId;
   }
-  const episodes = newEpisodes?.map((newEpisode) => {
+  newPodcast.episodes = newPodcast.episodes?.map((newEpisode: Episode) => {
     // If the episode exists in oldPodcast, use that.
-    const oldEpisode = oldEpisodes.find((episode) => {
+    const oldEpisode = oldPodcast.episodes?.find((episode: Episode) => {
       return episode.url === newEpisode.url;
     });
     if (oldEpisode) {
@@ -80,7 +75,7 @@ function mergePodcasts(
       return newEpisode;
     }
   });
-  return [newPodcast, episodes];
+  return newPodcast;
 }
 
 program
@@ -88,12 +83,9 @@ program
   .description('Ingest a podcast into the Podverse app.')
   .argument('<podcastUrl>', 'URL of the podcast RSS feed.')
   .action(async (podcastUrl: string) => {
-    const [newPodcast, episodes] = await readPodcastFeed(podcastUrl);
+    const newPodcast = await readPodcastFeed(podcastUrl);
     SetPodcast(newPodcast);
-    for (const episode of episodes) {
-      SetEpisode(episode);
-    }
-    term('Ingested podcast: ').green(newPodcast.slug)(` (${episodes.length} episodes)\n`);
+    term('Ingested podcast: ').green(newPodcast.slug)(` (${newPodcast.episodes?.length} episodes)\n`);
   });
 
 program
@@ -111,8 +103,7 @@ program
       } else {
         term.red(' (no corpus)');
       }
-      const episodes = await ListEpisodes(slug);
-      term(` - ${episodes.length} episodes\n`);
+      term(` - ${podcast.episodes?.length} episodes\n`);
     }
   });
 
@@ -171,7 +162,7 @@ program
   .description('Delete a podcast from the Podverse app.')
   .argument('<slug>', 'Slug of the podcast to delete.')
   .action(async (slug: string) => {
-    await kv.del(`podcasts:${slug}`);
+    await DeletePodcast(slug);
     term('Deleted podcast: ').green(slug + '\n');
   });
 
@@ -189,24 +180,18 @@ program
     }
     for (const slug of slugs) {
       const podcast = await GetPodcast(slug);
-      const episodes = await Promise.all(
-        (await ListEpisodes(slug)).map(async (episodeSlug) => await GetEpisode(slug, episodeSlug)),
-      );
       if (!podcast.rssUrl) {
         term('Unable to refresh, as podcast is missing RSS URL: ').red(slug + '\n');
         continue;
       }
-      const [newPodcast, newEpisodes] = await readPodcastFeed(podcast.rssUrl);
-      if (!options.force) {
-        const [setPodcast, setEpisodes] = mergePodcasts(podcast, episodes, newPodcast, newEpisodes);
-        SetPodcast(setPodcast);
-        for (const episode of setEpisodes) {
-          SetEpisode(episode);
-        }
-      } else {
+      const newPodcast = await readPodcastFeed(podcast.rssUrl);
+      if (options.force) {
         SetPodcast(newPodcast);
+      } else {
+        const setPodcast = mergePodcasts(podcast, newPodcast);
+        SetPodcast(setPodcast);
       }
-      const diff = ((await ListEpisodes(newPodcast.slug)).length ?? 0) - (episodes?.length ?? 0);
+      const diff = (newPodcast.episodes?.length ?? 0) - (podcast.episodes?.length ?? 0);
       term('Refreshed podcast: ').green(slug)(` (${newPodcast.episodes?.length} episodes, ${diff} new)\n`);
     }
   });
