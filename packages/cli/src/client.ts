@@ -10,31 +10,15 @@ export async function GetPodcast(slug: string): Promise<Podcast> {
     throw new Error(`Podcast with slug ${slug} not found.`);
   }
   const podcast = podcastData[0] as Podcast;
-  // Read episodes.
-  podcast.episodes = await Promise.all(
-    (await ListEpisodes(slug)).map((episodeSlug) => {
-      return GetEpisode(slug, episodeSlug);
-    }),
-  );
   return podcast;
 }
 
 /** Set metadata for the given podcast. */
 export async function SetPodcast(podcast: Podcast) {
-  // Don't write episodes to the Podcast entry.
-  const writePodcast = { ...podcast, episodes: null };
-  await kv.json.set(`podcasts:${podcast.slug}`, '$', writePodcast);
-  // Write episodes separately.
-  await podcast.episodes?.map(async (episode: Episode) => {
-    await SetEpisode(episode);
-  });
+  await kv.json.set(`podcasts:${podcast.slug}`, '$', podcast);
 }
 
 export async function DeletePodcast(slug: string) {
-  const podcast = await GetPodcast(slug);
-  await podcast.episodes?.map(async (episode: Episode) => {
-    await DeleteEpisode(episode);
-  });
   await kv.del(`podcasts:${slug}`);
 }
 
@@ -56,36 +40,35 @@ export async function ListPodcasts(): Promise<string[]> {
 }
 
 /** Return metadata for the given episode. */
-export async function GetEpisode(podcastSlug: string, episodeSlug: string): Promise<Episode> {
-  const episodeData = await kv.json.get(`podcasts:${podcastSlug}:${episodeSlug}`, '$');
-  if (!episodeData) {
-    throw new Error(`Episode with slug ${podcastSlug}:${episodeSlug} not found.`);
-  }
-  return episodeData[0] as Episode;
+export async function GetEpisode(podcastSlug: string, episodeSlug: string): Promise<Episode | undefined> {
+  const podcast = await GetPodcast(podcastSlug);
+  return podcast.episodes?.find((e: Episode) => e.slug === episodeSlug);
 }
 
 /** Set metadata for the given episode. */
 export async function SetEpisode(episode: Episode) {
-  await kv.json.set(`podcasts:${episode.podcastSlug}:${episode.slug}`, '$', episode);
+  const podcast = await GetPodcast(episode.podcastSlug);
+  if (!podcast.episodes) {
+    podcast.episodes = [episode];
+  } else {
+    const index = podcast.episodes?.findIndex((ep: Episode) => ep.slug === episode.slug) ?? -1;
+    if (podcast.episodes && index !== -1) {
+      podcast.episodes[index] = episode;
+    } else {
+      podcast.episodes.push(episode);
+    }
+  }
+  await SetPodcast(podcast);
 }
 
 export async function DeleteEpisode(episode: Episode) {
-  await kv.del(`podcasts:${episode.podcastSlug}:${episode.slug}`);
+  const podcast = await GetPodcast(episode.podcastSlug);
+  podcast.episodes = podcast.episodes?.filter((ep: Episode) => ep.slug !== episode.slug);
+  await SetPodcast(podcast);
 }
 
 /** Return a list of all episodes in this Podcast. */
 export async function ListEpisodes(podcastSlug: string): Promise<string[]> {
-  const slugs: string[] = [];
-  let cursor = 0;
-  do {
-    const episodes = await kv.scan(cursor, { match: `podcasts:${podcastSlug}:*` });
-    cursor = episodes[0];
-    const keys = episodes[1];
-    keys.map((key: string) => {
-      // Strip the "podcasts:podcastSlug:" prefix.
-      key = key.substring(9 + podcastSlug.length + 1);
-      slugs.push(key);
-    });
-  } while (cursor !== 0);
-  return slugs;
+  const podcast = await GetPodcast(podcastSlug);
+  return podcast.episodes?.map((e: Episode) => e.slug) ?? [];
 }
