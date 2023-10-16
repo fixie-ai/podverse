@@ -11,8 +11,8 @@ import terminal from 'terminal-kit';
 const { terminal: term } = terminal;
 import slug from 'slug';
 import { Episode, Podcast } from 'podverse-types';
-import { GetPodcast, SetPodcast, DeletePodcast, ListPodcasts, SetEpisode } from './client.js';
-//import { ProcessPodcast } from './process.js';
+import { GetPodcast, SetPodcast, DeletePodcast, ListPodcasts } from './client.js';
+import { ProcessPodcast } from './process.js';
 import { dump, load } from 'js-yaml';
 import fs from 'fs';
 
@@ -141,7 +141,7 @@ program
   .action(async (filename: string) => {
     const configFile = load(fs.readFileSync(filename, 'utf8')) as ConfigFile;
     for (const podcastConfig of configFile.podcasts) {
-      let podcast = null;
+      let podcast: Podcast | null = null;
       try {
         // Check to see if it exists.
         podcast = await GetPodcast(podcastConfig.slug);
@@ -202,12 +202,11 @@ program
   .option('--no-transcribe', 'Disable audio transcription.')
   .action(async (podcast: string | null, opts) => {
     const podcasts = podcast ? [podcast] : await ListPodcasts();
-    term(opts);
     for (const podcastSlug of podcasts) {
       term('Processing: ').green(`${podcastSlug}...\n`);
-      //const podcast = await GetPodcast(podcastSlug);
-      //const processed = await ProcessPodcast(podcast, { transcribe: opts.transcribe });
-      //await SetPodcast(processed);
+      const podcast = await GetPodcast(podcastSlug);
+      const processed = await ProcessPodcast(podcast, { transcribe: opts.transcribe });
+      await SetPodcast(processed);
       term('Finished processing: ').green(`${podcastSlug}\n`);
     }
   });

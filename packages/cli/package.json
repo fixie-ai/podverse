@@ -20,6 +20,7 @@
     "@google-cloud/storage": "^7.3.0",
     "@vercel/kv": "^0.2.2",
     "@vercel/node": "^2.15.5",
+    "ai-jsx": "^0.22.0",
     "commander": "^11.0.0",
     "dotenv": "^16.3.1",
     "eslint": "^8.44.0",

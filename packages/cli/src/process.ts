@@ -4,6 +4,7 @@ import { Podcast, Episode } from 'podverse-types';
 import slug from 'slug';
 import { UploadToGCS } from './utils.js';
 import { Transcribe } from './transcribe.js';
+import { Summarize } from './summary.js';
 import terminal from 'terminal-kit';
 const { terminal: term } = terminal;
 
@@ -29,9 +30,11 @@ export async function ProcessEpisode(podcastSlug: string, episode: Episode, opts
   const transcript = await Transcribe(episode.audioUrl);
   const tslug = slug(episode.title);
   const transcriptUrl = await UploadToGCS(PODVERSE_GCS_BUCKET, `${podcastSlug}/transcript/${tslug}.txt`, transcript);
-  console.log(`Transcript URL: ${transcriptUrl}`);
+  term(`Uploaded transcript: ${transcriptUrl}`);
   episode.transcriptUrl = transcriptUrl;
-  // TODO: Generate summary.
+  const summary = await Summarize(transcript);
+  const summaryUrl = await UploadToGCS(PODVERSE_GCS_BUCKET, `${podcastSlug}/summary/${tslug}.txt`, summary);
+  term(`Uploaded summary: ${summaryUrl}`);
   return episode;
 }
 
@@ -42,6 +45,7 @@ export async function ProcessPodcast(podcast: Podcast, opts: ProcessOptions): Pr
   const newEpisodes: Episode[] = [];
   for (const episode of podcast.episodes) {
     newEpisodes.push(await ProcessEpisode(slug, episode, opts));
+    break; // XXX MDW HACKING
   }
   podcast.episodes = newEpisodes;
   return podcast;
