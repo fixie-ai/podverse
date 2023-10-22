@@ -1,5 +1,6 @@
 /** This module performs audio->text transcription using Deepgram. */
 
+import ora from 'ora';
 import { config } from 'dotenv';
 config();
 
@@ -11,7 +12,7 @@ if (!DEEPGRAM_API_KEY) throw new Error('Missing DEEPGRAM_API_KEY environment var
 
 /** Transcribe the given audio file and return the text of the transcript. */
 export async function Transcribe(audioUrl: string): Promise<string> {
-  console.log(`Transcribing ${audioUrl}`);
+  const spinner = ora(`Transcribing: ${audioUrl}...`).start();
   const deepgram = new Deepgram(DEEPGRAM_API_KEY);
   const source = {
     url: audioUrl,
@@ -28,5 +29,6 @@ export async function Transcribe(audioUrl: string): Promise<string> {
     result.results?.channels[0].alternatives[0].paragraphs?.transcript ||
     result.results?.channels[0].alternatives[0].transcript ||
     '';
+  spinner.succeed(`Transcribed: ${audioUrl}`);
   return transcript;
 }

@@ -13,6 +13,7 @@ import slug from 'slug';
 import { Episode, Podcast } from 'podverse-types';
 import { GetPodcast, SetPodcast, DeletePodcast, ListPodcasts } from './client.js';
 import { ProcessPodcast } from './process.js';
+import { Summarize } from './summary.js';
 import { dump, load } from 'js-yaml';
 import fs from 'fs';
 
@@ -199,16 +200,35 @@ program
 program
   .command('process [podcast]')
   .description('Process the given podcast, or all podcasts if not specified.')
+  .option('-f, --force', 'Force re-processing of already-processed episodes.')
   .option('--no-transcribe', 'Disable audio transcription.')
+  .option('--no-summarize', 'Disable summarization.')
+  .option('--max-episodes [number]', 'Maximum number of episodes to process.')
   .action(async (podcast: string | null, opts) => {
     const podcasts = podcast ? [podcast] : await ListPodcasts();
     for (const podcastSlug of podcasts) {
       term('Processing: ').green(`${podcastSlug}...\n`);
       const podcast = await GetPodcast(podcastSlug);
-      const processed = await ProcessPodcast(podcast, { transcribe: opts.transcribe });
+      const processed = await ProcessPodcast(podcast, {
+        transcribe: opts.transcribe,
+        summarize: opts.summarize,
+        force: opts.force,
+        maxEpisodes: opts.maxEpisodes,
+      });
       await SetPodcast(processed);
       term('Finished processing: ').green(`${podcastSlug}\n`);
     }
+  });
+
+program
+  .command('summarize <url>')
+  .description('Summarize the text content at the given URL.')
+  .action(async (url: string) => {
+    term(`Summarizing ${url}...`);
+    const res = await fetch(url);
+    const text = await res.text();
+    const result = await Summarize(text);
+    term('Summary:\n').green(result + '\n');
   });
 
 program.parse(process.argv);
