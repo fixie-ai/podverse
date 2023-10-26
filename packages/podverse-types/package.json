@@ -2,8 +2,7 @@
   "name": "podverse-types",
   "version": "0.1.0",
   "type": "module",
-  "main": "src/types.ts",
-  "types": "src/types.ts",
+  "main": "dist/index.js",
   "private": true,
   "scripts": {
     "build": "tsc",

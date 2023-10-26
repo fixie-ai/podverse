@@ -1,5 +1,5 @@
 {
-  "name": "ingester",
+  "name": "podverse-cli",
   "version": "0.1.0",
   "private": true,
   "license": "MIT",
@@ -16,12 +16,17 @@
   ],
   "packageManager": "yarn@3.6.0",
   "dependencies": {
+    "@deepgram/sdk": "^2.4.0",
+    "@google-cloud/storage": "^7.3.0",
     "@vercel/kv": "^0.2.2",
     "@vercel/node": "^2.15.5",
+    "ai-jsx": "^0.22.0",
     "commander": "^11.0.0",
+    "dotenv": "^16.3.1",
     "eslint": "^8.44.0",
     "js-yaml": "^4.1.0",
-    "podverse-types": "*",
+    "ora": "^7.0.1",
+    "podverse-types": "workspace:*",
     "rss-parser": "^3.13.0",
     "slug": "^8.2.2",
     "terminal-kit": "^3.0.0"
