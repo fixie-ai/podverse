@@ -3,39 +3,89 @@ import { useEffect, useState } from 'react'
 import { nanoid } from '@/lib/utils'
 import { Chat } from '@/components/chat'
 import { Episode, Podcast } from 'podverse-types'
-import { EpisodeCard } from '@/components/episodecard'
+import { buttonVariants } from '@/components/ui/button'
 import { PodcastHeader } from '@/components/podcastheader'
 import { ExternalLink } from '@/components/external-link'
+import { format } from 'date-fns'
+import Link from 'next/link'
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger
+} from '@/components/ui/accordion'
+import { Skeleton } from '@/components/ui/skeleton'
 
 type RouteSegment = { params: { podcastSlug: string; index: number } }
 
-function EpisodeDetail({ episode }: { episode: Episode }) {
+function EpisodeSummary({ url }: { url: string }) {
+  const [summary, setSummary] = useState<string | null>(null)
+
+  //useEffect(() => {
+  //  fetch(url).then(res => res.text()).then(setSummary);
+  //}, [url]);
+
   return (
-    <div className="flex flex-row mx-auto w-8/12 mt-12 gap-4 p-8 rounded-lg border bg-background">
+    <div className="flex flex-col gap-2 text-sm">
+      <LinkButton href={url}>Summary link</LinkButton>
+      {summary ? (
+        summary
+      ) : (
+        <div className="w-full flex flex-col gap-2">
+          <Skeleton className="w-full h-[10px] rounded-full" />
+          <Skeleton className="w-full h-[10px] rounded-full" />
+          <Skeleton className="w-full h-[10px] rounded-full" />
+        </div>
+      )}
+    </div>
+  )
+}
+
+function LinkButton({ href, children }: { href: string; children: any }) {
+  const className = buttonVariants({ variant: 'link' }) + ' text-sky-600'
+  return (
+    <Link href={href} className={className}>
+      {children}
+    </Link>
+  )
+}
+
+function EpisodeDetail({ episode }: { episode: Episode }) {
+  const pubDate = episode.pubDate
+    ? format(new Date(episode.pubDate), 'MMMM dd, yyyy')
+    : null
+  return (
+    <div className="flex flex-row mx-auto w-8/12 mt-4 gap-4 p-4 rounded-lg border bg-background">
       <div className="flex flex-col items-start">
-        <div className="px-6">{episode.title}</div>
-        {episode.pubDate && (
-          <div className="text-sm text-muted-foreground p-6">
-            Published {episode.pubDate}
+        <div>{episode.title}</div>
+        {pubDate && (
+          <div className="text-sm text-muted-foreground pt-4">
+            Published {pubDate}
           </div>
         )}
         {episode.description && (
-          <div className="px-6 text-sm">{episode.description}</div>
+          <div className="text-sm pt-4">{episode.description}</div>
         )}
-        {episode.url && (
-          <div className="pt-6 px-6">
-            <ExternalLink href={episode.url}>Link to episode</ExternalLink>
-          </div>
-        )}
-        {episode.audioUrl && (
-          <div className="px-6">
-            <ExternalLink href={episode.audioUrl}>Audio</ExternalLink>
-          </div>
-        )}
-        {episode.transcriptUrl && (
-          <div className="px-6">
-            <ExternalLink href={episode.transcriptUrl}>Transcript</ExternalLink>
-          </div>
+        <div className="flex flex-row pt-4 gap-4 justify-start">
+          {episode.url && (
+            <LinkButton href={episode.url}>Episode link</LinkButton>
+          )}
+          {episode.audioUrl && (
+            <LinkButton href={episode.audioUrl}>Audio</LinkButton>
+          )}
+          {episode.transcriptUrl && (
+            <LinkButton href={episode.transcriptUrl}>Transcript</LinkButton>
+          )}
+        </div>
+        {episode.summaryUrl && (
+          <Accordion className="w-full" type="single" collapsible>
+            <AccordionItem value="item-1">
+              <AccordionTrigger>AI-generated summary</AccordionTrigger>
+              <AccordionContent>
+                <EpisodeSummary url={episode.summaryUrl} />
+              </AccordionContent>
+            </AccordionItem>
+          </Accordion>
         )}
       </div>
       {episode.imageUrl && (
