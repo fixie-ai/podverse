@@ -1,5 +1,7 @@
 podcasts:
-  - description: >-
+  - title: 99% Invisible
+    url: https://www.stitcher.com
+    description: >-
       Design is everywhere in our lives, perhaps most importantly in the places
       where we've just stopped noticing. 99% Invisible is a weekly exploration
       of the process and power of design and architecture. From award winning
@@ -8,43 +10,43 @@ podcasts:
       https://image.simplecastcdn.com/images/00c81e60-45f9-4643-9fed-2184b2b6a3d3/5fbdc9d4-22ab-4b3a-a2bd-72777b15c30c/3000x3000/stitcher-cover-99percentinvisible-3000x3000-r2021-final.jpg?aid=rss_feed
     rssUrl: https://feeds.simplecast.com/BqbsxVfO
     slug: 99-invisible
-    title: 99% Invisible
-    url: https://www.stitcher.com
-    corpusId: '1100'
   - imageUrl: >-
       https://wordpress.wbur.org/wp-content/uploads/2017/12/endless-thread-logo-3000x3000-1.jpg
     rssUrl: https://rss.wbur.org/endlessthread/podcast
     slug: endless-thread
     title: Endless Thread
     url: https://www.wbur.org/podcasts/endlessthread
-    corpusId: '1101'
     description: >-
       Hosts Ben Brock Johnson and Amory Sivertson dig into the internet's vast
       and curious ecosystem of online communities to find untold histories,
       unsolved mysteries, and other jaw-dropping stories online and IRL. 
-  - slug: front-end-happy-hour
-    title: Front End Happy Hour
-    url: http://frontendhappyhour.com/
-    corpusId: '1095'
-    description: >-
+  - description: >-
       A podcast featuring panelists of engineers from Netflix, Twitch, &
       Atlassian talking over drinks about all things Front End development.
     imageUrl: https://i1.sndcdn.com/avatars-000287353351-tdlqh4-original.jpg
     rssUrl: https://feeds.soundcloud.com/users/soundcloud:users:206137365/sounds.rss
-  - imageUrl: >-
+    slug: front-end-happy-hour
+    title: Front End Happy Hour
+    url: http://frontendhappyhour.com/
+  - description: >-
+      A podcast for developers interested in building great software products.
+      Every episode, Adam Wathan is joined by a guest to talk about everything
+      from product design and user experience to unit testing and system
+      administration.
+    imageUrl: >-
       https://images.transistor.fm/file/transistor/images/show/13470/full_1597943814-artwork.jpg
     rssUrl: https://feeds.transistor.fm/full-stack-radio
     slug: full-stack-radio
     title: Full Stack Radio
     url: http://fullstackradio.com
-    corpusId: '1102'
-    description: >-
-      A podcast for developers interested in building great software products.
-      Every episode, Adam Wathan is joined by a guest to talk about everything
-      from product design and user experience to unit testing and system
-      administration.
-  - url: https://www.latent.space/podcast
-    corpusId: '1103'
+  - imageUrl: >-
+      https://substackcdn.com/feed/podcast/1084089/92120159a90420fb694c09dfd0a904e8.jpg
+    rssUrl: https://api.substack.com/feed/podcast/1084089.rss
+    slug: latent-space
+    title: >-
+      Latent Space: The AI Engineer Podcast — CodeGen, Agents, Computer Vision,
+      Data Science, AI UX and all things Software 3.0
+    url: https://www.latent.space/podcast
     description: >-
       The podcast by and for AI Engineers! We are the first place over 50k
       developers hear news and interviews about Software 3.0 - Foundation Models
@@ -56,14 +58,8 @@ podcasts:
       tiny (George Hotz), Databricks, Glean, Replit, Roboflow, MosaicML, UC
       Berkeley, OpenAI, and more. <br/><br/><a
       href="https://www.latent.space?utm_medium=podcast">www.latent.space</a>
-    imageUrl: >-
-      https://substackcdn.com/feed/podcast/1084089/92120159a90420fb694c09dfd0a904e8.jpg
-    rssUrl: https://api.substack.com/feed/podcast/1084089.rss
-    slug: latent-space
-    title: >-
-      Latent Space: The AI Engineer Podcast — CodeGen, Agents, Computer Vision,
-      Data Science, AI UX and all things Software 3.0
-  - description: >-
+  - url: https://www.kexp.org/podcasts/live-on-kexp/
+    description: >-
       <p>Formerly known as &ldquo;KEXP&rsquo;s Live Performances,&rdquo; Live on
       KEXP brings you the very best of KEXP&rsquo;s world-renowned live
       in-studio and remote performances. Each week, we&rsquo;ll bring you a new
@@ -76,25 +72,189 @@ podcasts:
       https://www.omnycontent.com/d/playlist/bad5d079-8dcb-4630-8770-aa090049131d/18f3a48e-1c64-43e8-96e9-aa40002038ee/856f4314-821f-46ca-bc8e-aa40002038f2/podcast.rss
     slug: live-on-kexp
     title: Live on KEXP
-    url: https://www.kexp.org/podcasts/live-on-kexp/
-    corpusId: '1104'
   - url: https://www.omnibusproject.com
-    corpusId: '95'
     description: >
-      Twice a week, Ken Jennings and John Roderick add a new entry to the
-      OMNIBUS, an encyclopedic reference work of strange-but-true stories that
-      they are compiling as a time capsule for future generations.
-    title: Omnibus
-    rssUrl: https://feeds.fireside.fm/omnibus/rss
-    slug: omnibus
-    suggestedQueries:
-      - What is the Stone of Scone?
-      - Who is Magic Alex?
+      Every week, Ken Jennings and John Roderick add a new entry to the OMNIBUS,
+      an encyclopedic reference work of strange-but-true stories that they are
+      compiling as a time capsule for future generations.
+    episodes:
+      - summaryUrl: >-
+          https://storage.googleapis.com/podverse/omnibus/summary/episode-570-uranium-cubes-entry-13761k0710.txt
+        title: 'Episode 570: Uranium Cubes (Entry 1376.1K0710)'
+        url: https://www.omnibusproject.com/570
+        audioUrl: >-
+          https://arttrk.com/p/MTCST/aphid.fireside.fm/d/1437767933/8658dd0c-baa7-4412-9466-918650a0013d/b1d40142-02a7-4aec-81b9-89c366611da2.mp3
+        imageUrl: >-
+          https://assets.fireside.fm/file/fireside-images/podcasts/images/8/8658dd0c-baa7-4412-9466-918650a0013d/episodes/b/b1d40142-02a7-4aec-81b9-89c366611da2/cover.jpg
+        pubDate: Thu, 19 Oct 2023 05:00:00 -0400
+        transcriptUrl: >-
+          https://storage.googleapis.com/podverse/omnibus/transcript/episode-570-uranium-cubes-entry-13761k0710.txt
+        description: >-
+          In which the remains of a useless Nazi "chandelier" unexpectedly
+          emerge in Maryland and Washington, and Ken thinks about Bilbo Baggins
+          too late.  Certificate #35410.
+        podcastSlug: omnibus
+        slug: episode-570-uranium-cubes-entry-13761k0710
+      - summaryUrl: >-
+          https://storage.googleapis.com/podverse/omnibus/summary/episode-569-raised-by-wolves-entry-1028ge4927.txt
+        transcriptUrl: >-
+          https://storage.googleapis.com/podverse/omnibus/transcript/episode-569-raised-by-wolves-entry-1028ge4927.txt
+        audioUrl: >-
+          https://arttrk.com/p/MTCST/aphid.fireside.fm/d/1437767933/8658dd0c-baa7-4412-9466-918650a0013d/cb1fb55a-0ff9-4e5e-806b-afc385050855.mp3
+        pubDate: Thu, 12 Oct 2023 05:00:00 -0400
+        podcastSlug: omnibus
+        slug: episode-569-raised-by-wolves-entry-1028ge4927
+        title: 'Episode 569: Raised by Wolves (Entry 1028.GE4927)'
+        url: https://www.omnibusproject.com/569
+        description: >-
+          In which the legend of feral children is traced from ancient mythology
+          all the way up to Smurfs and Russian street dogs, and John cannot
+          recommend the Madrid Zoo. Certificate #22714.
+        imageUrl: >-
+          https://assets.fireside.fm/file/fireside-images/podcasts/images/8/8658dd0c-baa7-4412-9466-918650a0013d/episodes/c/cb1fb55a-0ff9-4e5e-806b-afc385050855/cover.jpg
+      - audioUrl: >-
+          https://arttrk.com/p/MTCST/aphid.fireside.fm/d/1437767933/8658dd0c-baa7-4412-9466-918650a0013d/342a56e3-f9de-414e-a414-85204c66bcc2.mp3
+        description: >-
+          In which an adman who survived Nazi and Soviet invasions goes on to
+          reinvent gay eroticism, and Ken wonders which Founding Father looked
+          best naked. Certificate #7136.
+        imageUrl: >-
+          https://assets.fireside.fm/file/fireside-images/podcasts/images/8/8658dd0c-baa7-4412-9466-918650a0013d/episodes/3/342a56e3-f9de-414e-a414-85204c66bcc2/cover.jpg
+        podcastSlug: omnibus
+        pubDate: Thu, 05 Oct 2023 05:00:00 -0400
+        transcriptUrl: >-
+          https://storage.googleapis.com/podverse/omnibus/transcript/episode-568-tom-of-finland-entry-1315ex0402.txt
+        slug: episode-568-tom-of-finland-entry-1315ex0402
+        summaryUrl: >-
+          https://storage.googleapis.com/podverse/omnibus/summary/episode-568-tom-of-finland-entry-1315ex0402.txt
+        title: 'Episode 568: Tom of Finland (Entry 1315.EX0402)'
+        url: https://www.omnibusproject.com/568
+      - title: 'Episode 567: The Magic Gang (Entry 747.EX0722)'
+        transcriptUrl: >-
+          https://storage.googleapis.com/podverse/omnibus/transcript/episode-567-the-magic-gang-entry-747ex0722.txt
+        imageUrl: >-
+          https://assets.fireside.fm/file/fireside-images/podcasts/images/8/8658dd0c-baa7-4412-9466-918650a0013d/episodes/9/96a29c98-5d01-4b37-bcc8-e30f9595ded9/cover.jpg
+        slug: episode-567-the-magic-gang-entry-747ex0722
+        podcastSlug: omnibus
+        pubDate: Thu, 28 Sep 2023 05:00:00 -0400
+        summaryUrl: >-
+          https://storage.googleapis.com/podverse/omnibus/summary/episode-567-the-magic-gang-entry-747ex0722.txt
+        url: https://www.omnibusproject.com/567
+        audioUrl: >-
+          https://arttrk.com/p/MTCST/aphid.fireside.fm/d/1437767933/8658dd0c-baa7-4412-9466-918650a0013d/96a29c98-5d01-4b37-bcc8-e30f9595ded9.mp3
+        description: >-
+          In which a ghost-written memoir explains how a great British stage
+          magician defeated Rommel in North Africa with his trickery, and John
+          considers saying "Abracadabra" as a swear. Certificate #37883.
+      - transcriptUrl: >-
+          https://storage.googleapis.com/podverse/omnibus/transcript/episode-566-the-traffic-jam-of-the-century-entry-1325ez1704.txt
+        url: https://www.omnibusproject.com/566
+        description: >-
+          In which a perfect storm of construction, coal mining, and Communist
+          commemoration creates twelve days of gridlock in central China, and
+          Ken imagines an ancient Roman in a stadium parking garage. Certificate
+          #34985.
+        imageUrl: >-
+          https://assets.fireside.fm/file/fireside-images/podcasts/images/8/8658dd0c-baa7-4412-9466-918650a0013d/episodes/f/fe73d56d-12f3-46a9-ba81-83860eb56d41/cover.jpg
+        podcastSlug: omnibus
+        pubDate: Thu, 21 Sep 2023 05:00:00 -0400
+        slug: episode-566-the-traffic-jam-of-the-century-entry-1325ez1704
+        summaryUrl: >-
+          https://storage.googleapis.com/podverse/omnibus/summary/episode-566-the-traffic-jam-of-the-century-entry-1325ez1704.txt
+        title: 'Episode 566: The Traffic Jam of the Century (Entry 1325.EZ1704)'
+        audioUrl: >-
+          https://arttrk.com/p/MTCST/aphid.fireside.fm/d/1437767933/8658dd0c-baa7-4412-9466-918650a0013d/fe73d56d-12f3-46a9-ba81-83860eb56d41.mp3
+      - imageUrl: >-
+          https://assets.fireside.fm/file/fireside-images/podcasts/images/8/8658dd0c-baa7-4412-9466-918650a0013d/episodes/6/60cb25b5-042a-4a27-852f-0181e2d85c50/cover.jpg
+        transcriptUrl: >-
+          https://storage.googleapis.com/podverse/omnibus/transcript/episode-565-one-glass-of-red-wine-entry-866de3233.txt
+        slug: episode-565-one-glass-of-red-wine-entry-866de3233
+        summaryUrl: >-
+          https://storage.googleapis.com/podverse/omnibus/summary/episode-565-one-glass-of-red-wine-entry-866de3233.txt
+        title: 'Episode 565: One Glass of Red Wine (Entry 866.DE3233)'
+        url: https://www.omnibusproject.com/565
+        audioUrl: >-
+          https://arttrk.com/p/MTCST/aphid.fireside.fm/d/1437767933/8658dd0c-baa7-4412-9466-918650a0013d/60cb25b5-042a-4a27-852f-0181e2d85c50.mp3
+        description: >-
+          In which one Canadian newsman convinces America for several decades
+          that daily drinking is the key to solving the "French Paradox," and
+          John thinks Ken looks inhibited holding a spatula. Certificate #13766.
+        podcastSlug: omnibus
+        pubDate: Thu, 14 Sep 2023 05:00:00 -0400
+      - description: >-
+          In which Japanese soldiers, unwilling to believe that World War II is
+          over, hold out for decades on islands all over the Pacific, and Ken
+          will never give up on bar soap. Certificate #44164.
+        imageUrl: >-
+          https://assets.fireside.fm/file/fireside-images/podcasts/images/8/8658dd0c-baa7-4412-9466-918650a0013d/episodes/7/701f7688-0e92-4dcf-85af-98fe0fcb95af/cover.jpg
+        podcastSlug: omnibus
+        pubDate: Thu, 07 Sep 2023 05:00:00 -0400
+        title: 'Episode 564: (LIVE) Hiroo Onoda (Entry 867.1C1526)'
+        url: https://www.omnibusproject.com/564
+        audioUrl: >-
+          https://arttrk.com/p/MTCST/aphid.fireside.fm/d/1437767933/8658dd0c-baa7-4412-9466-918650a0013d/701f7688-0e92-4dcf-85af-98fe0fcb95af.mp3
+        summaryUrl: >-
+          https://storage.googleapis.com/podverse/omnibus/summary/episode-564-live-hiroo-onoda-entry-8671c1526.txt
+        transcriptUrl: >-
+          https://storage.googleapis.com/podverse/omnibus/transcript/episode-564-live-hiroo-onoda-entry-8671c1526.txt
+        slug: episode-564-live-hiroo-onoda-entry-8671c1526
+      - url: https://www.omnibusproject.com/563
+        podcastSlug: omnibus
+        pubDate: Thu, 31 Aug 2023 05:00:00 -0400
+        summaryUrl: >-
+          https://storage.googleapis.com/podverse/omnibus/summary/episode-563-kids-on-milk-cartons-entry-686de2407.txt
+        slug: episode-563-kids-on-milk-cartons-entry-686de2407
+        title: 'Episode 563: Kids on Milk Cartons (Entry 686.DE2407)'
+        transcriptUrl: >-
+          https://storage.googleapis.com/podverse/omnibus/transcript/episode-563-kids-on-milk-cartons-entry-686de2407.txt
+        audioUrl: >-
+          https://arttrk.com/p/MTCST/aphid.fireside.fm/d/1437767933/8658dd0c-baa7-4412-9466-918650a0013d/2036996c-25f0-4127-a38e-3d1e67a6264c.mp3
+        description: >-
+          In which a nationwide panic over "stranger danger" turns regional
+          dairies into activists for missing children, and John likes when
+          things are "de minimis." Certificate #25468.
+        imageUrl: >-
+          https://assets.fireside.fm/file/fireside-images/podcasts/images/8/8658dd0c-baa7-4412-9466-918650a0013d/episodes/2/2036996c-25f0-4127-a38e-3d1e67a6264c/cover.jpg
+      - audioUrl: >-
+          https://arttrk.com/p/MTCST/aphid.fireside.fm/d/1437767933/8658dd0c-baa7-4412-9466-918650a0013d/cd6340a4-9e68-420a-89cb-bb515a4b1d24.mp3
+        imageUrl: >-
+          https://assets.fireside.fm/file/fireside-images/podcasts/images/8/8658dd0c-baa7-4412-9466-918650a0013d/episodes/c/cd6340a4-9e68-420a-89cb-bb515a4b1d24/cover.jpg
+        podcastSlug: omnibus
+        summaryUrl: >-
+          https://storage.googleapis.com/podverse/omnibus/summary/episode-562-the-ns-savannah-entry-849mk0436.txt
+        title: 'Episode 562: The NS Savannah (Entry 849.MK0436)'
+        url: https://www.omnibusproject.com/562
+        description: >-
+          In which the world's first nuclear-powered merchant vessel is launched
+          in all its modernist glory, and Ken wants an infinitely long ship. 
+          Certificate #26615.
+        pubDate: Thu, 24 Aug 2023 05:00:00 -0400
+        slug: episode-562-the-ns-savannah-entry-849mk0436
+        transcriptUrl: >-
+          https://storage.googleapis.com/podverse/omnibus/transcript/episode-562-the-ns-savannah-entry-849mk0436.txt
+      - summaryUrl: >-
+          https://storage.googleapis.com/podverse/omnibus/summary/episode-561-the-dumont-network-entry-386lk2417.txt
+        transcriptUrl: >-
+          https://storage.googleapis.com/podverse/omnibus/transcript/episode-561-the-dumont-network-entry-386lk2417.txt
+        description: >-
+          In which the three nascent American broadcast networks face a
+          challenge from a scrappy engineering lab, and John thinks gadgeteers
+          should be certified.  Certificate #28450.
+        imageUrl: >-
+          https://assets.fireside.fm/file/fireside-images/podcasts/images/8/8658dd0c-baa7-4412-9466-918650a0013d/episodes/7/735593e6-aa54-459c-a49b-92578c361d3f/cover.jpg
+        podcastSlug: omnibus
+        slug: episode-561-the-dumont-network-entry-386lk2417
+        audioUrl: >-
+          https://arttrk.com/p/MTCST/aphid.fireside.fm/d/1437767933/8658dd0c-baa7-4412-9466-918650a0013d/735593e6-aa54-459c-a49b-92578c361d3f.mp3
+        pubDate: Thu, 17 Aug 2023 05:00:00 -0400
+        title: 'Episode 561: The DuMont Network (Entry 386.LK2417)'
+        url: https://www.omnibusproject.com/561
     imageUrl: >-
       https://assets.fireside.fm/file/fireside-images/podcasts/images/8/8658dd0c-baa7-4412-9466-918650a0013d/cover.jpg
-  - url: http://www.pitchforkeconomics.com
-    corpusId: '6'
-    description: >-
+    rssUrl: https://feeds.fireside.fm/omnibus/rss
+    slug: omnibus
+    title: Omnibus
+  - description: >-
       Any society that allows itself to become radically unequal eventually
       collapses into an uprising or a police state—or both. Join venture
       capitalist Nick Hanauer and some of the world’s leading economic and
@@ -106,9 +266,8 @@ podcasts:
     rssUrl: https://feeds.megaphone.fm/pitchforkeconomics
     slug: pitchfork-economics-with-nick-hanauer
     title: Pitchfork Economics with Nick Hanauer
-  - url: https://www.npr.org/podcasts/510351/short-wave
-    corpusId: '1106'
-    description: >-
+    url: http://www.pitchforkeconomics.com
+  - description: >-
       New discoveries, everyday mysteries, and the science behind the headlines
       — all in about 10 minutes. It's science for everyone, using a lot of
       creativity and a little humor. Join hosts Emily Kwong, Aaron Scott and
@@ -121,3 +280,4 @@ podcasts:
     rssUrl: https://feeds.npr.org/510351/podcast.xml
     slug: short-wave
     title: Short Wave
+    url: https://www.npr.org/podcasts/510351/short-wave

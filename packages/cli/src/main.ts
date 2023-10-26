@@ -58,7 +58,10 @@ async function readPodcastFeed(podcastUrl: string, podcastSlug?: string): Promis
   return newPodcast;
 }
 
-/** Merge two podcasts by keeping existing epiodes from oldPodcast. */
+/**
+ * Merge two podcasts. Metadata from newPodcast is preferred, but episodes present in oldPodcast
+ * are retained by keeping existing epiodes from oldPodcast.
+ */
 function mergePodcasts(oldPodcast: Podcast, newPodcast: Podcast): Podcast {
   // Retain old corpus ID if one was already set for this podcast, since this does not
   // come from the RSS feed.
@@ -139,17 +142,23 @@ program
   .command('load')
   .description('Load the current configuration from a YAML file.')
   .argument('<filename>', 'YAML file to read the configuration from.')
-  .action(async (filename: string) => {
+  .option('--overwrite', 'Overwrite existing podcast data in the KV store.')
+  .action(async (filename: string, opts) => {
     const configFile = load(fs.readFileSync(filename, 'utf8')) as ConfigFile;
     for (const podcastConfig of configFile.podcasts) {
       let podcast: Podcast | null = null;
       try {
         // Check to see if it exists.
         podcast = await GetPodcast(podcastConfig.slug);
-        term('Updating: ').green(podcastConfig.slug);
+        if (opts.overwrite) {
+          term('Overwriting: ').green(podcastConfig.slug + '\n');
+        } else {
+          term('Updating: ').green(podcastConfig.slug + '\n');
+          podcast = mergePodcasts(podcast, podcastConfig);
+        }
       } catch (err) {
         // Assume the podcast does not exist, let's create it.
-        term().yellow('Creating: ').green(podcastConfig.slug);
+        term().yellow('Creating: ').green(podcastConfig.slug + '\n');
       }
       // Override all fields from the YAML file.
       podcast = podcastConfig;
@@ -169,9 +178,9 @@ program
 
 program
   .command('refresh')
-  .description('Refresh the list of podcasts.')
+  .description('Refresh podcast episode lists by adding new episodes from their RSS feeds.')
   .argument('[slug]', 'Slug of the podcast to refresh. If not specified, all podcasts will be refreshed.')
-  .option('-f, --force', 'Force re-ingestion of podcast episodes.')
+  .option('--overwrite', 'Overwrite existing podcast data in the KV store.')
   .action(async (slug: string, options) => {
     let slugs: string[] = [];
     if (slug) {
@@ -186,7 +195,7 @@ program
         continue;
       }
       const newPodcast = await readPodcastFeed(podcast.rssUrl);
-      if (options.force) {
+      if (options.overwrite) {
         SetPodcast(newPodcast);
       } else {
         const setPodcast = mergePodcasts(podcast, newPodcast);
