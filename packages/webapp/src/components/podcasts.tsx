@@ -39,11 +39,7 @@ export function Podcasts() {
 
   return (
     <div className="w-full grid grid-cols-3 gap-4 p-12">
-      {podcasts.length === 0 ? (
-        <>{cardSkeleton}</>
-      ) : (
-        <>{cards}</>
-      )}
+      {podcasts.length === 0 ? <>{cardSkeleton}</> : <>{cards}</>}
     </div>
   )
 }

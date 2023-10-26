@@ -158,7 +158,9 @@ program
         }
       } catch (err) {
         // Assume the podcast does not exist, let's create it.
-        term().yellow('Creating: ').green(podcastConfig.slug + '\n');
+        term()
+          .yellow('Creating: ')
+          .green(podcastConfig.slug + '\n');
       }
       // Override all fields from the YAML file.
       podcast = podcastConfig;

@@ -35,7 +35,7 @@ function rechunk(chunks: string[], maxTokenLen: number): string[] {
 
 async function Summary(
   { children, systemMessage, maxTokenLen }: { children: AI.Node; systemMessage: string; maxTokenLen: number },
-  { render }: AI.ComponentContext,
+  { render }: AI.ComponentContext
 ) {
   const text = await render(children);
   return (
@@ -68,11 +68,10 @@ const PODCAST_SUMMARY = `Provide a one-paragraph summary of the
 
 async function PodcastSummary(
   { children, maxTokenLen, debug }: { children: AI.Node; maxTokenLen: number; debug?: boolean },
-  { render }: AI.ComponentContext,
+  { render }: AI.ComponentContext
 ) {
   let text = await render(children);
   let systemMessage = TRANSCRIPT_SUMMARY;
-
 
   // Reduce the transcript to a shorter summary.
   while (tokenLen(text) > maxTokenLen) {
@@ -89,9 +88,9 @@ async function PodcastSummary(
           await render(
             <Summary systemMessage={systemMessage} maxTokenLen={maxTokenLen}>
               {chunk}
-            </Summary>,
-          ),
-      ),
+            </Summary>
+          )
+      )
     );
     const summarizedTranscript = rechunk(transcriptSummaries, maxTokenLen);
     text = summarizedTranscript.join('\n');
@@ -107,7 +106,7 @@ async function PodcastSummary(
   return await render(
     <Summary systemMessage={PODCAST_SUMMARY} maxTokenLen={maxTokenLen}>
       {text}
-    </Summary>,
+    </Summary>
   );
 }
 

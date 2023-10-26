@@ -30,7 +30,11 @@ async function maybeTranscribe(episode: Episode, opts: ProcessOptions): Promise<
   if (!episode.audioUrl) throw new Error('Episode missing audioUrl field.');
   const transcript = await Transcribe(episode.audioUrl);
   const tslug = slug(episode.title);
-  const transcriptUrl = await UploadToGCS(PODVERSE_GCS_BUCKET, `${episode.podcastSlug}/transcript/${tslug}.txt`, transcript);
+  const transcriptUrl = await UploadToGCS(
+    PODVERSE_GCS_BUCKET,
+    `${episode.podcastSlug}/transcript/${tslug}.txt`,
+    transcript
+  );
   term(`Uploaded transcript: ${transcriptUrl}\n`);
   episode.transcriptUrl = transcriptUrl;
   return episode;
@@ -62,7 +66,11 @@ async function maybeSummarize(podcast: Podcast, episode: Episode, opts: ProcessO
 
   term('\n\n  Summary: ').green(finalSummary).green('\n\n');
   const tslug = slug(episode.title);
-  const summaryUrl = await UploadToGCS(PODVERSE_GCS_BUCKET, `${episode.podcastSlug}/summary/${tslug}.txt`, finalSummary);
+  const summaryUrl = await UploadToGCS(
+    PODVERSE_GCS_BUCKET,
+    `${episode.podcastSlug}/summary/${tslug}.txt`,
+    finalSummary
+  );
   term(`Uploaded summary: ${summaryUrl}\n`);
   episode.summaryUrl = summaryUrl;
   return episode;
