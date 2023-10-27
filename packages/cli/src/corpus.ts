@@ -4,6 +4,7 @@ import { Podcast, Episode } from 'podverse-types';
 import terminal from 'terminal-kit';
 const { terminal: term } = terminal;
 import { FixieClient } from 'fixie';
+import { FixieAgent } from 'fixie';
 
 export interface IndexOptions {
   force?: boolean;

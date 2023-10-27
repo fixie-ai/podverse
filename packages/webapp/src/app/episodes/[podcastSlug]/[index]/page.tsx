@@ -1,7 +1,7 @@
 'use client'
 import { useEffect, useState, ReactNode } from 'react'
 import { nanoid } from '@/lib/utils'
-import { Chat } from '@/components/chat'
+import { FixieChat } from '@/components/fixie-chat'
 import { Episode, Podcast } from 'podverse-types'
 import { buttonVariants } from '@/components/ui/button'
 import { PodcastHeader } from '@/components/podcastheader'
@@ -134,11 +134,7 @@ export default function EpisodeSinglePage({ params }: RouteSegment) {
     <>
       <PodcastHeader podcast={podcast} />
       <EpisodeDetail episode={episode} />
-      <Chat
-        id={nanoid()}
-        apiPath="/api/podcasts/query"
-        corpusId={podcast.corpusId!}
-      />
+      <FixieChat />
     </>
   ) : (
     <div></div>

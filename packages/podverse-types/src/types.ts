@@ -11,6 +11,7 @@ export type Podcast = {
   rssUrl?: string;
   imageUrl?: string;
   corpusId?: string;
+  agentId?: string;
   suggestedQueries?: string[];
   episodes?: Episode[];
 };
