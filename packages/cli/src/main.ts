@@ -13,7 +13,7 @@ import slug from 'slug';
 import { Episode, Podcast } from 'podverse-types';
 import { GetPodcast, SetPodcast, DeletePodcast, ListPodcasts } from './client.js';
 import { ProcessPodcast } from './process.js';
-import { IndexPodcast } from './index.js';
+import { IndexPodcast } from './corpus.js';
 import { Summarize } from './summary.js';
 import { dump, load } from 'js-yaml';
 import fs from 'fs';
