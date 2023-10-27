@@ -1,48 +1,46 @@
 'use client'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, ReactNode } from 'react'
 import { nanoid } from '@/lib/utils'
 import { Chat } from '@/components/chat'
 import { Episode, Podcast } from 'podverse-types'
 import { buttonVariants } from '@/components/ui/button'
 import { PodcastHeader } from '@/components/podcastheader'
-import { ExternalLink } from '@/components/external-link'
 import { format } from 'date-fns'
 import Link from 'next/link'
+import { Button } from '@/components/ui/button'
 import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger
-} from '@/components/ui/accordion'
-import { Skeleton } from '@/components/ui/skeleton'
+  Popover,
+  PopoverContent,
+  PopoverTrigger
+} from '@/components/ui/popover'
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger
+} from '@/components/ui/dialog'
+import {
+  LightBulbIcon,
+  LinkIcon,
+  SpeakerWaveIcon,
+  ChatBubbleBottomCenterTextIcon,
+  ChatBubbleBottomCenterIcon
+} from '@heroicons/react/24/outline'
 
 type RouteSegment = { params: { podcastSlug: string; index: number } }
 
-function EpisodeSummary({ url }: { url: string }) {
-  const [summary, setSummary] = useState<string | null>(null)
-
-  //useEffect(() => {
-  //  fetch(url).then(res => res.text()).then(setSummary);
-  //}, [url]);
-
+function EpisodeSummary({ summary }: { summary: string }) {
   return (
     <div className="flex flex-col gap-2 text-sm">
-      <LinkButton href={url}>Summary link</LinkButton>
-      {summary ? (
-        summary
-      ) : (
-        <div className="w-full flex flex-col gap-2">
-          <Skeleton className="w-full h-[10px] rounded-full" />
-          <Skeleton className="w-full h-[10px] rounded-full" />
-          <Skeleton className="w-full h-[10px] rounded-full" />
-        </div>
-      )}
+      <div>{summary}</div>
     </div>
   )
 }
 
-function LinkButton({ href, children }: { href: string; children: any }) {
-  const className = buttonVariants({ variant: 'link' }) + ' text-sky-600'
+function LinkButton({ href, children }: { href: string; children: ReactNode }) {
+  const className = buttonVariants({ variant: 'outline' })
   return (
     <Link href={href} className={className}>
       {children}
@@ -66,27 +64,44 @@ function EpisodeDetail({ episode }: { episode: Episode }) {
         {episode.description && (
           <div className="text-sm pt-4">{episode.description}</div>
         )}
-        <div className="flex flex-row pt-4 gap-4 justify-start">
+        <div className="grid grid-cols-2 pt-4 gap-2 justify-center">
           {episode.url && (
-            <LinkButton href={episode.url}>Episode link</LinkButton>
+            <LinkButton href={episode.url}>
+              <LinkIcon className="h-full pr-2" />
+              Episode link
+            </LinkButton>
           )}
           {episode.audioUrl && (
-            <LinkButton href={episode.audioUrl}>Audio</LinkButton>
+            <LinkButton href={episode.audioUrl}>
+              <SpeakerWaveIcon className="h-full pr-2" />
+              Audio
+            </LinkButton>
           )}
           {episode.transcriptUrl && (
-            <LinkButton href={episode.transcriptUrl}>Transcript</LinkButton>
+            <LinkButton href={episode.transcriptUrl}>
+              <ChatBubbleBottomCenterTextIcon className="h-full pr-2" />
+              Transcript
+            </LinkButton>
+          )}
+          {episode.summary && (
+            <Dialog>
+              <DialogTrigger>
+                <Button variant={'outline'} className="">
+                  <LightBulbIcon className="h-full pr-2" />
+                  AI-generated summary
+                </Button>
+              </DialogTrigger>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>{episode.title}</DialogTitle>
+                  <DialogDescription>
+                    <div className="text-sm font-mono pt-4">{episode.summary}</div>
+                  </DialogDescription>
+                </DialogHeader>
+              </DialogContent>
+            </Dialog>
           )}
         </div>
-        {episode.summaryUrl && (
-          <Accordion className="w-full" type="single" collapsible>
-            <AccordionItem value="item-1">
-              <AccordionTrigger>AI-generated summary</AccordionTrigger>
-              <AccordionContent>
-                <EpisodeSummary url={episode.summaryUrl} />
-              </AccordionContent>
-            </AccordionItem>
-          </Accordion>
-        )}
       </div>
       {episode.imageUrl && (
         <div className="w-72">

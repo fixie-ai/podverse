@@ -44,7 +44,7 @@ async function maybeSummarize(podcast: Podcast, episode: Episode, opts: ProcessO
   const PODVERSE_GCS_BUCKET = process.env.PODVERSE_GCS_BUCKET || '';
   if (!PODVERSE_GCS_BUCKET) throw new Error('Missing PODVERSE_GCS_BUCKET environment variable.');
 
-  if (episode.summaryUrl && !opts.force) {
+  if (episode.summaryUrl && episode.summary && !opts.force) {
     term('  Skipping summarization - already summarized.\n');
     return episode;
   }
@@ -72,6 +72,7 @@ async function maybeSummarize(podcast: Podcast, episode: Episode, opts: ProcessO
     finalSummary
   );
   term(`Uploaded summary: ${summaryUrl}\n`);
+  episode.summary = summary;
   episode.summaryUrl = summaryUrl;
   return episode;
 }

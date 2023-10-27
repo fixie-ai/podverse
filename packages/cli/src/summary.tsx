@@ -59,8 +59,7 @@ const TEXT_SUMMARY = `Provide a one or two sentence summary of the
 
 const PODCAST_SUMMARY = `Provide a one-paragraph summary of the
   following text, which describes a podcast episode. Start out with
-  "This episode..." or "The topic of this episode is...". Use punchy,
-  exciting language meant to be colloquial, fun, and engaging.
+  "This episode..." or "The topic of this episode is...".
   If the title of the podcast, the name of the episode, or the names of
   the speakers are mentioned, include them in your summary. Only use the
   information provided in the text; DO NOT use any information you know

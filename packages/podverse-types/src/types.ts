@@ -27,5 +27,6 @@ export type Episode = {
   audioUrl?: string;
   transcriptUrl?: string;
   summaryUrl?: string;
+  summary?: string;
   suggestedQueries?: string[];
 };
