@@ -55,7 +55,7 @@ async function maybeSummarize(podcast: Podcast, episode: Episode, opts: ProcessO
   if (!episode.transcriptUrl) throw new Error('Episode missing transcriptUrl field.');
   const res = await fetch(episode.transcriptUrl);
   const transcript = await res.text();
-  const summary = await Summarize(transcript);
+  const summary = await Summarize(transcript, podcast, episode);
 
   const finalSummary = `
     Podcast: ${podcast.title}

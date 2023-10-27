@@ -3,6 +3,7 @@ import * as AI from 'ai-jsx';
 import { ChatCompletion, SystemMessage, UserMessage } from 'ai-jsx/core/completion';
 import { OpenAI } from 'ai-jsx/lib/openai';
 import terminal from 'terminal-kit';
+import { Podcast, Episode } from 'podverse-types';
 const { terminal: term } = terminal;
 
 // Rough estimate.
@@ -35,7 +36,7 @@ function rechunk(chunks: string[], maxTokenLen: number): string[] {
 
 async function Summary(
   { children, systemMessage, maxTokenLen }: { children: AI.Node; systemMessage: string; maxTokenLen: number },
-  { render }: AI.ComponentContext
+  { render }: AI.ComponentContext,
 ) {
   const text = await render(children);
   return (
@@ -47,7 +48,7 @@ async function Summary(
 }
 
 const TRANSCRIPT_SUMMARY = `Provide a one or two sentence summary of the
-  following segment of a podcast transcript. Only use the information
+  following podcast transcript. Only use the information
   provided in the text; DO NOT use any information you know about the world.
   Include the title of the podcast, the name of the episode, and the
   names of the speakers, if known.`;
@@ -58,19 +59,32 @@ const TEXT_SUMMARY = `Provide a one or two sentence summary of the
   podcast, the name of the episode, and the names of the speakers, if known.`;
 
 const PODCAST_SUMMARY = `Provide a one-paragraph summary of the
-  following text, which describes a podcast episode. Start out with
+  following text, which describes a single podcast episode. Start out with
   "This episode..." or "The topic of this episode is...".
   If the title of the podcast, the name of the episode, or the names of
   the speakers are mentioned, include them in your summary. Only use the
   information provided in the text; DO NOT use any information you know
   about the world.`;
 
+function makePrompt(text: string, podcast?: Podcast, episode?: Episode) {
+  return text + '\n' + (podcast?.title ? `The name of the podcast is: ${podcast.title}\n` : '');
+  //    (episode?.title ? `The title of the episode is: ${episode.title}\n` : '') +
+  //    (episode?.description ? `The provided description of the episode is: ${episode.description}\n` : '')
+}
+
 async function PodcastSummary(
-  { children, maxTokenLen, debug }: { children: AI.Node; maxTokenLen: number; debug?: boolean },
-  { render }: AI.ComponentContext
+  {
+    children,
+    podcast,
+    episode,
+    maxTokenLen,
+    debug,
+  }: { children: AI.Node; podcast?: Podcast; episode?: Episode; maxTokenLen: number; debug?: boolean },
+  { render }: AI.ComponentContext,
 ) {
   let text = await render(children);
-  let systemMessage = TRANSCRIPT_SUMMARY;
+
+  let systemMessage = makePrompt(TRANSCRIPT_SUMMARY, podcast, episode);
 
   // Reduce the transcript to a shorter summary.
   while (tokenLen(text) > maxTokenLen) {
@@ -87,33 +101,39 @@ async function PodcastSummary(
           await render(
             <Summary systemMessage={systemMessage} maxTokenLen={maxTokenLen}>
               {chunk}
-            </Summary>
-          )
-      )
+            </Summary>,
+          ),
+      ),
     );
     const summarizedTranscript = rechunk(transcriptSummaries, maxTokenLen);
     text = summarizedTranscript.join('\n');
     if (debug) {
       term('New text is:\n').blue(text)('\n');
     }
-    systemMessage = TEXT_SUMMARY;
+    systemMessage = makePrompt(TEXT_SUMMARY, podcast, episode);
   }
   // Generate the final podcast summary.
   if (debug) {
     term(`Size is ${tokenLen(text)} - Generating final summary.`);
   }
   return await render(
-    <Summary systemMessage={PODCAST_SUMMARY} maxTokenLen={maxTokenLen}>
+    <Summary systemMessage={makePrompt(PODCAST_SUMMARY, podcast, episode)} maxTokenLen={maxTokenLen}>
       {text}
-    </Summary>
+    </Summary>,
   );
 }
 
-export async function Summarize(text: string, maxTokenLen?: number, debug?: boolean): Promise<string> {
+export async function Summarize(
+  text: string,
+  podcast?: Podcast,
+  episode?: Episode,
+  maxTokenLen?: number,
+  debug?: boolean,
+): Promise<string> {
   term(`Summarizing ${text.length} chars...\n`);
   const app = (
     <OpenAI chatModel="gpt-4-32k">
-      <PodcastSummary debug={debug ?? false} maxTokenLen={maxTokenLen ?? 4000}>
+      <PodcastSummary podcast={podcast} episode={episode} debug={debug ?? false} maxTokenLen={maxTokenLen ?? 4000}>
         {text}
       </PodcastSummary>
     </OpenAI>

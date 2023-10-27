@@ -13,6 +13,7 @@ import slug from 'slug';
 import { Episode, Podcast } from 'podverse-types';
 import { GetPodcast, SetPodcast, DeletePodcast, ListPodcasts } from './client.js';
 import { ProcessPodcast } from './process.js';
+import { IndexPodcast } from './index.js';
 import { Summarize } from './summary.js';
 import { dump, load } from 'js-yaml';
 import fs from 'fs';
@@ -228,6 +229,21 @@ program
       });
       await SetPodcast(processed);
       term('Finished processing: ').green(`${podcastSlug}\n`);
+    }
+  });
+
+program
+  .command('index [podcast]')
+  .description('Generate a Fixie Corpus for the given podcast, or all podcasts if not specified.')
+  .option('-f, --force', 'Force re-indexing of already-processed podcasts.')
+  .action(async (podcast: string | null, opts) => {
+    const podcasts = podcast ? [podcast] : await ListPodcasts();
+    for (const podcastSlug of podcasts) {
+      term('Indexing: ').green(`${podcastSlug}...\n`);
+      const podcast = await GetPodcast(podcastSlug);
+      const indexed = await IndexPodcast(podcast, { force: opts.force });
+      await SetPodcast(indexed);
+      term('Started indexing: ').green(`${podcastSlug}\n`);
     }
   });
 
