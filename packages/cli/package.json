@@ -24,6 +24,7 @@
     "commander": "^11.0.0",
     "dotenv": "^16.3.1",
     "eslint": "^8.44.0",
+    "fixie": "^3.0.2",
     "js-yaml": "^4.1.0",
     "ora": "^7.0.1",
     "podverse-types": "workspace:*",
